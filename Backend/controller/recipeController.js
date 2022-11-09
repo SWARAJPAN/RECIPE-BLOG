@@ -54,12 +54,10 @@ const updateRecipe = async (req, res) => {
   try {
     const recipe = await Recipes.findByIdAndUpdate(
       recipeID,
-      {
-        description: req.body.description, //--> updation of any tags (i.e, name, desp, ingridnts) needs this syntax
-        $push: { ingredients: updatedIngredients },
-      },
+      req.body,
+      // description: req.body.description, --> updation of any tags (i.e, name, desp, ingridnts) needs this syntax
+      // $push: { ingredients: updatedIngredients },
       // { $pull: { ingredients: updatedIngredients } }, -- to delete duplicates
-
       {
         new: true,
         runValidators: true,
