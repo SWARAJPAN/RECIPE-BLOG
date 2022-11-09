@@ -3,7 +3,7 @@ const Recipes = require("../models/recipeModel");
 //get all Recipes
 const getAllRecipe = async (req, res) => {
   try {
-    const recipe = await Recipes.find({}); //.find({})
+    const recipe = await Recipes.find({}); //.populate({ path: "publishedBy", select: "name , email", }); //.find({})
 
     // res.status(200).json({ recipe, amount: recipe.length });
     // res.status(200).json({ success: true, data: { recipe, amount: recipe.length } });
@@ -50,7 +50,7 @@ const getRecipe = async (req, res) => {
 //update Recipe: patch method
 const updateRecipe = async (req, res) => {
   const recipeID = req.params.id;
-  const updatedIngredients = req.body.ingredients;
+  // const updatedIngredients = req.body.ingredients;
   try {
     const recipe = await Recipes.findByIdAndUpdate(
       recipeID,
@@ -70,25 +70,27 @@ const updateRecipe = async (req, res) => {
     }
     res.status(200).json({ recipe });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    res.status(500).json({ message: error });
   }
   // res.send("patch method");
 };
 
 //delete Recipe
 const deleteRecipe = async (req, res) => {
-  // const recipeID = req.params.id;
-  // try {
-  //   const recipe = await Recipes.findOneAndDelete({ _id: recipeID });
-  //   if (!recipe) {
-  //     return res
-  //       .status(404)
-  //       .json({ msg: `No recipe with id: ${recipeID} found.` });
-  //   }
-  //   res.status(200).json({ recipe });
-  // } catch (error) {
-  //   res.status(500).json({ msg: error });
-  // }
+  const recipeID = req.params.id;
+  try {
+    const recipe = await Recipes.findByIdAndDelete(recipeID);
+    if (!recipe) {
+      return res
+        .status(404)
+        .json({ message: `No recipe with id: ${recipeID} found.` });
+    }
+    res
+      .status(200)
+      .json({ message: `Recipe with id ${recipeID} has been deleted` });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
 };
 
 module.exports = {

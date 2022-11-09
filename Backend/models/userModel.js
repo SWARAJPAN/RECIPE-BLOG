@@ -21,11 +21,13 @@ const UserSchema = new mongoose.Schema(
     publishedRecipe: [
       {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "recipe",
       },
     ],
     bookmarkedRecipe: [
       {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "recipe",
       },
     ],
   },

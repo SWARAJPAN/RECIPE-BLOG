@@ -27,6 +27,7 @@ const RecipeSchema = new mongoose.Schema(
     },
     publishedBy: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
     },
   },
   { timestamps: true }
