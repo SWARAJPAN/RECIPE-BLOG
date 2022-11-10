@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "recipe",
-        unique: true,
+        // unique: true,
       },
     ],
     bookmarkedRecipe: [

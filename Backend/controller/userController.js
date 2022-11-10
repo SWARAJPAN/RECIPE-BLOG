@@ -65,15 +65,15 @@ const logIn = async (req, res, next) => {
     });
 };
 
-//create user
-const createUser = async (req, res) => {
-  try {
-    const user = await Users.create(req.body);
-    res.status(200).json({ message: "success", user });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+// //create user
+// const createUser = async (req, res) => {
+//   try {
+//     const user = await Users.create(req.body);
+//     res.status(200).json({ message: "success", user });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 //get user
 const getUser = async (req, res) => {
@@ -138,8 +138,9 @@ const updateUser = async (req, res) => {
 //delete user
 const deleteUser = async (req, res) => {
   const userID = req.params.id;
+
   try {
-    const user = await Recipes.findByIdAndDelete(userID);
+    const user = await Users.findByIdAndDelete(userID);
     if (!user) {
       return res
         .status(404)
@@ -147,17 +148,17 @@ const deleteUser = async (req, res) => {
     }
     res
       .status(200)
-      .json({ message: `Recipe with id ${userID} has been deleted` });
+      .json({ message: `User with id ${userID} has been deleted` });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
 };
 
 module.exports = {
+  // createUser,
   signUp,
   logIn,
   getUser,
-  createUser,
   getOneUser,
   updateUser,
   deleteUser,

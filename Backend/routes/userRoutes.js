@@ -14,11 +14,11 @@ const {
 } = require("../controller/userController");
 
 router.get("/users", getUser);
-router.post("/users", createUser);
 router.get("/users/:id", getOneUser);
 router.patch("/users/:id", auth, updateUser);
 router.delete("/users/:id", auth, deleteUser);
 router.post("/users/signup", signUp);
 router.post("/users/login", logIn);
+// router.post("/users", createUser);
 
 module.exports = router;

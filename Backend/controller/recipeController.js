@@ -9,14 +9,10 @@ const getAllRecipe = async (req, res) => {
       .skip(eval("(" + req.query.skip + " )"))
       .limit(eval("(" + req.query.limit + " )")); //.populate({ path: "publishedBy", select: "name , email", }); //.find({})
 
-    // res.status(200).json({ recipe, amount: recipe.length });
-    // res.status(200).json({ success: true, data: { recipe, amount: recipe.length } });
     res.status(200).json({ message: "success", recipe, length: recipe.length });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-
-  // res.send("get all recipes");
 };
 
 //create a new Recipe
@@ -30,18 +26,16 @@ const createRecipe = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-  // res.send("new created recipes");
 };
 
 //get single Recipe
 const getRecipe = async (req, res) => {
-  // console.log("2");
   console.log(req.params);
   const recipeID = req.params.id;
   console.log(recipeID);
   try {
     const recipe = await Recipes.findById(recipeID);
-    // console.log(recipe);
+
     if (!recipe) {
       return res.status(404).json({ message: `${recipeID} does not exist` });
     }
@@ -76,7 +70,6 @@ const updateRecipe = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-  // res.send("patch method");
 };
 
 //delete Recipe
