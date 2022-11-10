@@ -16,6 +16,9 @@ const RecipeSchema = new mongoose.Schema(
       type: String,
       // required: true,
     },
+    like: {
+      type: String,
+    },
 
     instruction: {
       type: String,

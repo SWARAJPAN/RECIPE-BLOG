@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -15,13 +16,13 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      maxLength: [8, "password cannot be more than 8 characters"],
-      unique: true,
+      // minLength: [8, "password should be at least 8 characters"],
     },
     publishedRecipe: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "recipe",
+        unique: true,
       },
     ],
     bookmarkedRecipe: [
@@ -33,6 +34,8 @@ const UserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.plugin(uniqueValidator);
 
 const Users = new mongoose.model("users", UserSchema);
 module.exports = Users;

@@ -3,13 +3,17 @@ const Recipes = require("../models/recipeModel");
 //get all Recipes
 const getAllRecipe = async (req, res) => {
   try {
-    const recipe = await Recipes.find({}); //.populate({ path: "publishedBy", select: "name , email", }); //.find({})
+    const recipe = await Recipes.find(eval("(" + req.query.where + ")"))
+      .select(eval("(" + req.query.select + ")"))
+      .sort(eval("(" + req.query.sort + " )"))
+      .skip(eval("(" + req.query.skip + " )"))
+      .limit(eval("(" + req.query.limit + " )")); //.populate({ path: "publishedBy", select: "name , email", }); //.find({})
 
     // res.status(200).json({ recipe, amount: recipe.length });
     // res.status(200).json({ success: true, data: { recipe, amount: recipe.length } });
     res.status(200).json({ message: "success", recipe, length: recipe.length });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
 
   // res.send("get all recipes");
@@ -24,7 +28,7 @@ const createRecipe = async (req, res) => {
     // const data = await recipe.save();
     res.status(201).json({ recipe });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
   // res.send("new created recipes");
 };
@@ -43,7 +47,7 @@ const getRecipe = async (req, res) => {
     }
     res.status(200).json({ recipe });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -70,7 +74,7 @@ const updateRecipe = async (req, res) => {
     }
     res.status(200).json({ recipe });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
   // res.send("patch method");
 };
@@ -89,7 +93,7 @@ const deleteRecipe = async (req, res) => {
       .status(200)
       .json({ message: `Recipe with id ${recipeID} has been deleted` });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
 };
 
