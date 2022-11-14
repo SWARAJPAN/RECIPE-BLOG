@@ -1,12 +1,10 @@
 #root {
-  max-width: 1280px;
   /* margin: 0 auto; */
-  /* padding: 2rem; */
-  text-align: center;
+  padding: 2rem 7%;
 }
 
 .navbar {
-  background-color: rgb(240, 100, 20);
+  background-color: #f06414;
   color: rgb(235, 225, 225);
   font-size: 1.5rem;
   font-weight: 600;

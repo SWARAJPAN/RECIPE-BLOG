@@ -1,128 +1,128 @@
-import { Component } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
+import { Grid } from "@mui/material";
+import * as yup from "yup";
+import { TextField, Button, Box } from "@mui/material";
 
-type Props = {};
+const validationSchema = yup.object({
+  username: yup
+    .string()
+    .min(3, "Must be at least 8 characters")
+    .max(20, "Must be less  than 20 characters")
+    .required("Username is required")
+    .matches(/^[a-zA-Z0-9]+$/, "Cannot contain special characters or spaces"),
+  email: yup
+    .string()
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(8, "Password should be of minimum 8 characters length")
+    .required("Password is required"),
+});
 
-type State = {
+interface Values {
   username: string;
   email: string;
   password: string;
-  successful: boolean;
-  message: string;
+}
+
+const Signup = () => {
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values: Values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
+  // console.log(formik);h
+
+  return (
+    <Grid container columnSpacing={{ xs: 12, xl: 12 }} rowSpacing={1}>
+      <Grid item xs={12}>
+        <Box sx={{ width: "100%" }}>
+          <Grid item xl={6}>
+            <Box>
+              {/* <h1>Signup</h1> */}
+              {/* <Formik formik={formik}> */}
+              <form onSubmit={formik.handleSubmit}>
+                <Grid item xl={12}>
+                  <Box
+                    sx={{
+                      width: "100vw",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <TextField
+                      id='username'
+                      name='username'
+                      label='Username'
+                      type='text'
+                      value={formik.values.username}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.username &&
+                        Boolean(formik.errors.username)
+                      }
+                      helperText={
+                        formik.touched.username && formik.errors.username
+                      }
+                      // helperText='Must be 8-20 characters and cannot contain special characters.
+                    />
+
+                    {/* </Grid> */}
+
+                    {/* <Grid item xs={20}> */}
+                    <TextField
+                      id='email'
+                      name='email'
+                      label='Email'
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.email && Boolean(formik.errors.email)
+                      }
+                      helperText={formik.touched.email && formik.errors.email}
+                    />
+                    {/* </Grid> */}
+
+                    {/* <Grid item xs={20}> */}
+                    <TextField
+                      id='password'
+                      name='password'
+                      label='Password'
+                      type='password'
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.password &&
+                        Boolean(formik.errors.password)
+                      }
+                      helperText={
+                        formik.touched.password && formik.errors.password
+                      }
+                    />
+                    <Button color='primary' variant='contained' type='submit'>
+                      Submit
+                    </Button>
+                  </Box>
+                </Grid>
+              </form>
+            </Box>
+          </Grid>
+          {/* </Formik> */}
+        </Box>
+      </Grid>
+    </Grid>
+  );
 };
 
-export default class Register extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.handleRegister = this.handleRegister.bind(this);
-
-    this.state = {
-      username: "",
-      email: "",
-      password: "",
-      successful: false,
-      message: "",
-    };
-  }
-
-  validationSchema() {
-    return Yup.object().shape({
-      username: Yup.string()
-        .test(
-          "len",
-          "The username must be between 3 and 20 characters.",
-          (val: any) =>
-            val && val.toString().length >= 3 && val.toString().length <= 20
-        )
-        .required("This field is required!"),
-      email: Yup.string()
-        .email("This is not a valid email.")
-        .required("This field is required!"),
-      password: Yup.string()
-        .test(
-          "len",
-          "The password must be between 6 and 40 characters.",
-          (val: any) =>
-            val && val.toString().length >= 6 && val.toString().length <= 40
-        )
-        .required("This field is required!"),
-    });
-  }
-
-  handleRegister(formValue: {
-    username: string;
-    email: string;
-    password: string;
-  }) {
-    const { username, email, password } = formValue;
-
-    this.setState({
-      message: "",
-      successful: false,
-    });
-  }
-
-  render() {
-    const { successful, message } = this.state;
-
-    const initialValues = {
-      username: "",
-      email: "",
-      password: "",
-    };
-
-    return (
-      <div>
-        <div>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={this.validationSchema}
-            onSubmit={this.handleRegister}
-          >
-            <Form>
-              {!successful && (
-                <div>
-                  <div>
-                    <label htmlFor='username'> Username </label>
-                    <Field name='username' type='text' />
-                    <ErrorMessage name='username' component='div' />
-                  </div>
-
-                  <div>
-                    <label htmlFor='email'> Email </label>
-                    <Field name='email' type='email' />
-                    <ErrorMessage name='email' component='div' />
-                  </div>
-
-                  <div className='form-group'>
-                    <label htmlFor='password'> Password </label>
-                    <Field name='password' type='password' />
-                    <ErrorMessage name='password' component='div' />
-                  </div>
-
-                  <div>
-                    <button type='submit'>Sign Up</button>
-                  </div>
-                </div>
-              )}
-
-              {message && (
-                <div>
-                  <div
-                    className={
-                      successful ? "alert alert-success" : "alert alert-danger"
-                    }
-                    role='alert'
-                  >
-                    {message}
-                  </div>
-                </div>
-              )}
-            </Form>
-          </Formik>
-        </div>
-      </div>
-    );
-  }
-}
+export default Signup;
