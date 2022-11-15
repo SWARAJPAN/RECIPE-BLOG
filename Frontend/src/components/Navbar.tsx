@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import RamenDiningIcon from "@mui/icons-material/RamenDining";
+import AccountMenu from "./AccountMenu";
 
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import { createTheme } from "@mui/material/styles";
@@ -20,7 +21,7 @@ import { orange } from "@mui/material/colors";
 const theme = createTheme({
   palette: {
     primary: {
-      main: orange[600],
+      main: "#FF914D",
       dark: orange[900],
       contrastText: "#fff",
     },
@@ -38,7 +39,7 @@ const theme = createTheme({
       margin: "0 10px",
       padding: "10px 20px",
       borderRadius: "15px",
-      backgroundColor: orange[600],
+      backgroundColor: "#FF914D",
       "&:focus": {
         backgroundColor: orange[800],
       },
@@ -46,31 +47,20 @@ const theme = createTheme({
   },
 });
 
-const pages = ["Publish", "Explore", "About"];
-const settings = ["Publishes", "Bookmarks", "Logout"];
+// const pages = ["Explore", "Publish", "Sign-In"];
 
-function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+export default function ResponsiveAppBar() {
+  //   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+  //     null
+  //   );
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
+  //   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //     setAnchorElNav(event.currentTarget);
+  //   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  //   const handleCloseNavMenu = () => {
+  //     setAnchorElNav(null);
+  //   };
 
   return (
     <ThemeProvider theme={theme}>
@@ -86,17 +76,24 @@ function ResponsiveAppBar() {
         <Container maxWidth='xl'>
           <Toolbar disableGutters>
             <RamenDiningIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+              sx={{
+                display: { xs: "none", md: "flex" },
+                mr: 1,
+                pr: 2,
+                fontSize: 70,
+              }}
             />
+
             <Typography
-              variant='h6'
+              variant='h4'
               noWrap
               component='a'
               href='/'
               sx={{
-                mr: 2,
+                // mr: 2,
+                // ml: auto",
                 display: { xs: "none", md: "flex" },
-                fontFamily: "Sanchez",
+                // fontFamily: "Sanchez",
                 fontWeight: 1000,
                 letterSpacing: ".1rem",
                 color: "inherit",
@@ -107,42 +104,15 @@ function ResponsiveAppBar() {
               RECIPES
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size='large'
-                aria-label='account of current user'
-                aria-controls='menu-appbar'
-                aria-haspopup='true'
-                onClick={handleOpenNavMenu}
-                color='inherit'
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id='menu-appbar'
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "center",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: "block", md: "none" },
-                  justifyContent: "space-between",
-                }}
-              >
-                {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign='center'>{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
+            <Box
+              sx={{
+                // marginLeft: "auto",
+                // flexGrow: 1,
+                // bgcolor: "background.paper",
+                display: { xs: "flex", md: "none" },
+              }}
+            >
+              {/* <AccountMenu /> */}
             </Box>
             <RamenDiningIcon
               sx={{
@@ -156,7 +126,7 @@ function ResponsiveAppBar() {
               component='a'
               href=''
               sx={{
-                mr: 2,
+                // mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
                 fontFamily: "Sanchez",
@@ -168,46 +138,17 @@ function ResponsiveAppBar() {
             >
               RECIPE
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title='Open settings'>
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id='menu-appbar'
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign='center'>{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
+            <Box
+              sx={{
+                // flexGrow: 1,
+                marginLeft: "auto",
+                display: { xs: "block", md: "flex" },
+              }}
+            >
+              <Button>
+                <AccountMenu />
+              </Button>
             </Box>
           </Toolbar>
         </Container>
@@ -215,4 +156,4 @@ function ResponsiveAppBar() {
     </ThemeProvider>
   );
 }
-export default ResponsiveAppBar;
+// export default ResponsiveAppBar;
