@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import RamenDiningIcon from "@mui/icons-material/RamenDining";
 import AccountMenu from "./AccountMenu";
+import PublicMenu from "./PublicMenu";
 
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import { createTheme } from "@mui/material/styles";
@@ -47,21 +48,7 @@ const theme = createTheme({
   },
 });
 
-// const pages = ["Explore", "Publish", "Sign-In"];
-
 export default function ResponsiveAppBar() {
-  //   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-  //     null
-  //   );
-
-  //   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-  //     setAnchorElNav(event.currentTarget);
-  //   };
-
-  //   const handleCloseNavMenu = () => {
-  //     setAnchorElNav(null);
-  //   };
-
   return (
     <ThemeProvider theme={theme}>
       <AppBar
@@ -104,16 +91,6 @@ export default function ResponsiveAppBar() {
               RECIPES
             </Typography>
 
-            <Box
-              sx={{
-                // marginLeft: "auto",
-                // flexGrow: 1,
-                // bgcolor: "background.paper",
-                display: { xs: "flex", md: "none" },
-              }}
-            >
-              {/* <AccountMenu /> */}
-            </Box>
             <RamenDiningIcon
               sx={{
                 display: { xs: "flex", md: "none" },

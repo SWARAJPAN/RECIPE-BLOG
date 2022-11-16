@@ -10,7 +10,7 @@ import SignUp from "./SignUp";
 export default function SimpleContainer() {
   return (
     <React.Fragment>
-      <Navbar />
+      {/* <Navbar /> */}
       <SignUp />
     </React.Fragment>
   );

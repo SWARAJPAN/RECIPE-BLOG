@@ -14,8 +14,9 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
 import * as yup from "yup";
-import { red } from "@mui/material/colors";
+import { red, blue } from "@mui/material/colors";
 import { BoltOutlined } from "@mui/icons-material";
+import { NavLink } from "react-router-dom";
 
 function Copyright(props: any) {
   return (
@@ -26,10 +27,7 @@ function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-      {/* <Link color='inherit' href='#'> */}
-      Recipe Blog
-      {/* </Link>{" "} */}
-      {new Date().getFullYear()}
+      Recipe Blog {new Date().getFullYear()}
       {"."}
     </Typography>
   );
@@ -44,7 +42,7 @@ const theme = createTheme({
       contrastText: "#fff",
     },
     secondary: {
-      main: "#FF5757",
+      main: "#7F8284",
       dark: "#676A6B",
       contrastText: "#fff",
     },
@@ -59,9 +57,19 @@ const theme = createTheme({
       textAlign: "center",
       justifyContent: "center",
       mb: 2,
-      // fontFamily: "arial",
+      marginBottom: "1rem",
+      "@media (max-width:420px)": {
+        fontSize: "2.4rem",
+      },
     },
-    subtitle1: { mt: 2, color: "#7F8284" },
+    subtitle1: {
+      mt: 2,
+      marginBottom: "1rem",
+      color: "#7F8284",
+      "@media (max-width:420px)": {
+        lineHeight: "1.3rem",
+      },
+    },
 
     button: {
       fontSize: 16,
@@ -125,14 +133,14 @@ export default function SignUp() {
     },
   });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   console.log({
+  //     email: data.get("email"),
+  //     password: data.get("password"),
+  //   });
+  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -140,14 +148,15 @@ export default function SignUp() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 7,
+            marginTop: 6,
+
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textAlign: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography
@@ -174,10 +183,9 @@ export default function SignUp() {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    // color='secondary'
+                    color='secondary'
                     autoComplete='given-name'
                     name='firstName'
-                    required
                     fullWidth
                     id='firstName'
                     label='First Name'
@@ -195,7 +203,7 @@ export default function SignUp() {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    required
+                    color='secondary'
                     fullWidth
                     id='lastName'
                     label='Last Name'
@@ -213,7 +221,7 @@ export default function SignUp() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    required
+                    color='secondary'
                     fullWidth
                     id='email'
                     label='Email Address'
@@ -227,7 +235,7 @@ export default function SignUp() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    required
+                    color='secondary'
                     fullWidth
                     name='password'
                     label='Password'
@@ -255,10 +263,14 @@ export default function SignUp() {
               </Button>
               <Grid container justifyContent='center'>
                 <Grid item>
-                  Already have an account?{" "}
-                  <Link href='#' variant='body1' fontWeight={"bold"}>
-                    Login.
-                  </Link>
+                  <Typography variant='subtitle1'>
+                    Already have an account?{" "}
+                    <NavLink to='/signin'>
+                      <Link variant='body1' fontWeight={"bold"}>
+                        Login.
+                      </Link>
+                    </NavLink>
+                  </Typography>
                 </Grid>
               </Grid>
             </form>

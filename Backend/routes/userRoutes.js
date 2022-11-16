@@ -5,7 +5,7 @@ const auth = require("../middleware/auth");
 
 const {
   getUser,
-  createUser,
+
   getOneUser,
   updateUser,
   deleteUser,

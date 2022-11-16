@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const signUp = async (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then((hash) => {
     const user = new Users({
-      name: req.body.name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       email: req.body.email,
       password: hash,
     });

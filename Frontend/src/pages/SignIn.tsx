@@ -12,6 +12,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { NavLink } from "react-router-dom";
+import * as yup from "yup";
+import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
+import { red } from "@mui/material/colors";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 
 function Copyright(props: any) {
   return (
@@ -22,24 +27,95 @@ function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-      Recipe Blog
-      {new Date().getFullYear()}
+      Recipe Blog {new Date().getFullYear()}
       {"."}
     </Typography>
   );
 }
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#FF5757",
+      // main: red[100],
+      dark: red[500],
+      contrastText: "#fff",
+    },
+    secondary: {
+      main: "#7F8284",
+      dark: "#676A6B",
+      contrastText: "#fff",
+    },
+  },
+
+  typography: {
+    h2: {
+      // fontSize: 12,
+      color: "#676A6B",
+      fontWeight: 600,
+      width: "100vw",
+      textAlign: "center",
+      justifyContent: "center",
+      mb: 2,
+      "@media (max-width:420px)": {
+        fontSize: "2.4rem",
+      },
+    },
+
+    subtitle1: { mt: 2, marginBottom: "1rem", color: "#7F8284" },
+
+    button: {
+      fontSize: 16,
+      fontWeight: "bold",
+      textTransform: "none",
+      padding: "10px 20px",
+      fontFamily: "arial",
+
+      borderRadius: "20px",
+      // backgroundColor: "#676A6B",
+      // "&:focus": {
+      //   backgroundColor: "#676A6B",
+      // },
+    },
+  },
+});
+
+const validationSchema = yup.object({
+  email: yup
+    .string()
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(8, "Password should be of minimum 8 characters length")
+    .required("Password is required"),
+});
+
+interface Values {
+  email: string;
+  password: string;
+}
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values: Values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
+
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   console.log({
+  //     email: data.get("email"),
+  //     password: data.get("password"),
+  //   });
+  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -47,68 +123,82 @@ export default function SignIn() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 6,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+            <LockOpenIcon />
           </Avatar>
-          <Typography component='h1' variant='h5'>
-            Sign in
+          <Typography component='h1' variant='h2'>
+            Welcome back!
+          </Typography>
+          <Typography component='h1' variant='subtitle1'>
+            Log in to post your freshly baked recipes.
           </Typography>
           <Box
-            component='form'
-            onSubmit={handleSubmit}
-            noValidate
+            // component='form'
+            // onSubmit={handleSubmit}
+            // noValidate
             sx={{ mt: 1 }}
           >
-            <TextField
-              margin='normal'
-              required
-              fullWidth
-              id='email'
-              label='Email Address'
-              name='email'
-              autoComplete='email'
-              autoFocus
-            />
-            <TextField
-              margin='normal'
-              required
-              fullWidth
-              name='password'
-              label='Password'
-              type='password'
-              id='password'
-              autoComplete='current-password'
-            />
-            <FormControlLabel
-              control={<Checkbox value='remember' color='primary' />}
-              label='Remember me'
-            />
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href='#' variant='body2'>
-                  Forgot password?
-                </Link>
+            <form onSubmit={formik.handleSubmit}>
+              <TextField
+                // sx={{
+                //   fieldset: { color: "info" },
+                // }}
+                color='secondary'
+                margin='normal'
+                fullWidth
+                id='email'
+                label='Email Address'
+                name='email'
+                autoComplete='email'
+                autoFocus
+                onChange={formik.handleChange}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+              <TextField
+                color='secondary'
+                margin='normal'
+                fullWidth
+                name='password'
+                label='Password'
+                type='password'
+                id='password'
+                autoComplete='current-password'
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+                helperText={formik.touched.password && formik.errors.password}
+              />
+
+              <Button
+                type='submit'
+                fullWidth
+                variant='contained'
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container justifyContent='center'>
+                <Grid item>
+                  <Typography variant='subtitle1'>
+                    Don't have an account?{" "}
+                    <NavLink to='/signup'>
+                      <Link fontWeight={"bold"} variant='body1'>
+                        Sign Up
+                      </Link>
+                    </NavLink>
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href='#' variant='body2'>
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+            </form>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
