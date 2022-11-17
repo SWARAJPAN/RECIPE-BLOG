@@ -133,7 +133,7 @@ export default function SignIn() {
             <LockOpenIcon />
           </Avatar>
           <Typography component='h1' variant='h2'>
-            Welcome back!
+            Nice to see you!
           </Typography>
           <Typography component='h1' variant='subtitle1'>
             Log in to post your freshly baked recipes.

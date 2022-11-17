@@ -13,8 +13,26 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import RamenDiningIcon from "@mui/icons-material/RamenDining";
+import Link from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-const pages = ["Explore", "Publish", "Sign-In"];
+const pages = [
+  {
+    id: 1,
+    title: "Explore",
+    path: "/",
+  },
+  {
+    id: 2,
+    title: "Publish",
+    path: "/publish",
+  },
+  {
+    id: 3,
+    title: "Sign-In",
+    path: "/signin",
+  },
+];
 
 export default function PublicMenu() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -32,14 +50,14 @@ export default function PublicMenu() {
   return (
     <Box
       sx={{
-        // marginLeft: "auto",
-        // flexGrow: 1,
+        marginLeft: "auto",
+        flexGrow: 1,
         // bgcolor: "background.paper",
         display: { xs: "flex", md: "none" },
       }}
     >
       <IconButton
-        size='large'
+        // size= "large",
         aria-label='account of current user'
         aria-controls='menu-appbar'
         aria-haspopup='true'
@@ -68,18 +86,14 @@ export default function PublicMenu() {
         }}
       >
         {pages.map((page) => (
-          <MenuItem key={page} onClick={handleCloseNavMenu}>
-            <Typography textAlign='center'>{page}</Typography>
-          </MenuItem>
-        ))}
-        {pages.map((page) => (
-          <Button
-            key={page}
-            onClick={handleCloseNavMenu}
-            sx={{ my: 2, color: "white", display: "block" }}
+          <NavLink
+            to={`${page.path}`}
+            style={{ textDecoration: "none", color: "black" }}
           >
-            {page}
-          </Button>
+            <MenuItem key={page.id} onClick={handleCloseNavMenu}>
+              <Typography textAlign='center'>{page.title}</Typography>
+            </MenuItem>
+          </NavLink>
         ))}
       </Menu>
     </Box>

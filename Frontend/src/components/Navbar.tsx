@@ -18,12 +18,13 @@ import PublicMenu from "./PublicMenu";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import { createTheme } from "@mui/material/styles";
 import { orange } from "@mui/material/colors";
+import { Link } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
     primary: {
       main: "#FF914D",
-      dark: orange[900],
+      dark: "CB692D",
       contrastText: "#fff",
     },
   },
@@ -32,21 +33,40 @@ const theme = createTheme({
 
     body1: { fontSize: 16 },
     button: {
-      fontSize: 22,
-      fontWeight: 600,
+      fontSize: 20,
+      fontWeight: 500,
       textTransform: "none",
       color: "#fff",
       fontFamily: "arial",
       margin: "0 10px",
-      padding: "10px 20px",
-      borderRadius: "15px",
-      backgroundColor: "#FF914D",
+
+      "&:hover": {
+        backgroundColor: "none",
+      },
       "&:focus": {
-        backgroundColor: orange[800],
+        backgroundColor: "#CB692D",
       },
     },
   },
 });
+
+const pages = [
+  {
+    id: 1,
+    title: "Explore",
+    path: "/",
+  },
+  {
+    id: 2,
+    title: "Publish",
+    path: "/publish",
+  },
+  {
+    id: 3,
+    title: "Sign-In",
+    path: "/signin",
+  },
+];
 
 export default function ResponsiveAppBar() {
   return (
@@ -54,14 +74,23 @@ export default function ResponsiveAppBar() {
       <AppBar
         position='static'
         sx={{
-          borderRadius: 5,
+          borderRadius: 4,
           height: 120,
           justifyContent: "center",
-          padding: "2rem",
+          padding: "0.5rem",
         }}
       >
         <Container maxWidth='xl'>
           <Toolbar disableGutters>
+            <Box
+              sx={{
+                // flexGrow: 1,
+                marginRight: 2,
+                display: { xs: "block", md: "flex" },
+              }}
+            >
+              <PublicMenu />
+            </Box>
             <RamenDiningIcon
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -94,7 +123,7 @@ export default function ResponsiveAppBar() {
             <RamenDiningIcon
               sx={{
                 display: { xs: "flex", md: "none" },
-                mr: 1,
+                mr: 0.5,
               }}
             />
             <Typography
@@ -103,23 +132,55 @@ export default function ResponsiveAppBar() {
               component='a'
               href=''
               sx={{
-                // mr: 2,
+                mr: 2,
                 display: { xs: "flex", md: "none" },
-                flexGrow: 1,
+                // flexGrow: 1,
                 fontFamily: "Sanchez",
-                fontWeight: 700,
-                letterSpacing: ".2rem",
+                fontWeight: 600,
+                // letterSpacing: ".2rem",
                 color: "inherit",
                 textDecoration: "none",
+                justifyContent: "space-between",
+                margin: "auto",
+                padding: "0 ",
               }}
             >
-              RECIPE
+              RECIPES
             </Typography>
+            <Box
+              sx={{
+                flexGrow: 1,
+
+                justifyContent: "end",
+                display: { xs: "none", md: "flex" },
+              }}
+            >
+              {pages.map((page) => (
+                <Link
+                  to={`${page.path}`}
+                  style={{ textDecoration: "none", color: "#ffff" }}
+                >
+                  <Button
+                    key={page.id}
+                    sx={{
+                      // my: 2,
+                      borderRadius: 2,
+                      margin: "0",
+                      color: "inherit",
+                      display: "block",
+                      padding: "4px 20px",
+                    }}
+                  >
+                    {page.title}
+                  </Button>
+                </Link>
+              ))}
+            </Box>
 
             <Box
               sx={{
                 // flexGrow: 1,
-                marginLeft: "auto",
+                // margin: "0",
                 display: { xs: "block", md: "flex" },
               }}
             >

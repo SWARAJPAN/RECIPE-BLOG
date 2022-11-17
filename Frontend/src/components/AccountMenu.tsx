@@ -13,6 +13,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import RamenDiningIcon from "@mui/icons-material/RamenDining";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 // import { NavLink } from "react-router-dom";
 
 const settings = ["Publishes", "Bookmarks", "Logout"];
@@ -33,8 +34,21 @@ export default function AccountMenu() {
   return (
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title='Open settings'>
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+        <IconButton
+          onClick={handleOpenUserMenu}
+          sx={{
+            p: 0,
+            margin: "0",
+            color: "white",
+            alignSelf: "end",
+            height: "50px",
+            padding: "1rem",
+          }}
+          // color='inherit'
+          // size='large'
+        >
+          {/* <Avatar src='/broken-image.jpg' /> */}
+          <AccountCircleIcon />
         </IconButton>
       </Tooltip>
       <Menu

@@ -11,7 +11,7 @@ export default function SimpleContainer() {
   return (
     <React.Fragment>
       {/* <Navbar /> */}
-      <SignUp />
+      {/* <SignUp /> */}
     </React.Fragment>
   );
 }
