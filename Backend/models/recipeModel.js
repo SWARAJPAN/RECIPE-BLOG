@@ -24,10 +24,15 @@ const RecipeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    cuisineTag: {
+    category: {
       type: String,
       trim: true,
     },
+    ethnicity: {
+      type: String,
+      trim: true,
+    },
+
     publishedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
