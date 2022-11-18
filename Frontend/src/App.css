@@ -1,5 +1,5 @@
 #root {
-  /* margin: 0 auto; */
+  /* margin: auto; */
   padding: 2rem 8%;
 }
 
@@ -10,8 +10,4 @@
   font-weight: 600;
   margin-top: 2rem;
   padding: 1rem;
-}
-
-a {
-  text-decoration: none;
 }

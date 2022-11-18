@@ -14,11 +14,17 @@ import MenuItem from "@mui/material/MenuItem";
 import RamenDiningIcon from "@mui/icons-material/RamenDining";
 import AccountMenu from "./AccountMenu";
 import PublicMenu from "./PublicMenu";
-
+import { useState } from "react";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import { createTheme } from "@mui/material/styles";
 import { orange } from "@mui/material/colors";
 import { Link } from "react-router-dom";
+import { Logout } from "@mui/icons-material";
+
+// const token: string = JSON.parse(localStorage.getItem("token"));
+
+// console.log(token, "token from nav");
+// console.log("hello");
 
 const theme = createTheme({
   palette: {
@@ -61,6 +67,7 @@ const pages = [
     title: "Publish",
     path: "/publish",
   },
+
   {
     id: 3,
     title: "Sign-In",
@@ -69,6 +76,14 @@ const pages = [
 ];
 
 export default function ResponsiveAppBar() {
+  const [login, setLogin] = useState(
+    JSON.parse(localStorage.getItem("token") || "{}")
+  );
+  const [show, setshow] = useState<boolean>(true);
+
+  console.log(login);
+
+  console.log(login.token, "token from nav");
   return (
     <ThemeProvider theme={theme}>
       <AppBar
@@ -104,7 +119,6 @@ export default function ResponsiveAppBar() {
               variant='h4'
               noWrap
               component='a'
-              href='/'
               sx={{
                 // mr: 2,
                 // ml: auto",
@@ -113,9 +127,8 @@ export default function ResponsiveAppBar() {
                 fontWeight: 1000,
                 letterSpacing: ".1rem",
                 color: "inherit",
-                textDecoration: "none",
-                listStyle: "none",
               }}
+              style={{ textDecoration: "none" }}
             >
               RECIPES
             </Typography>
@@ -144,6 +157,7 @@ export default function ResponsiveAppBar() {
                 margin: "auto",
                 padding: "0 ",
               }}
+              style={{ textDecoration: "none" }}
             >
               RECIPES
             </Typography>
@@ -159,6 +173,7 @@ export default function ResponsiveAppBar() {
                 <Link
                   to={`${page.path}`}
                   style={{ textDecoration: "none", color: "#ffff" }}
+                  key={page.title}
                 >
                   <Button
                     key={page.id}
@@ -184,9 +199,11 @@ export default function ResponsiveAppBar() {
                 display: { xs: "block", md: "flex" },
               }}
             >
-              <Button>
+              {JSON.stringify(login) === JSON.stringify({}) ? (
+                ""
+              ) : (
                 <AccountMenu />
-              </Button>
+              )}
             </Box>
           </Toolbar>
         </Container>

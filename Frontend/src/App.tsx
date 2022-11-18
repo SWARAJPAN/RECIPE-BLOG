@@ -12,21 +12,20 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Publish from "./pages/Publish";
 
-function App() {
+export default function App() {
   return (
-    <div className='App'>
+    <>
       {/* <Home /> */}
       <BrowserRouter>
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
+
           <Route path='/publish' element={<Publish />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/signin' element={<SignIn />} />
         </Routes>
       </BrowserRouter>
-    </div>
+    </>
   );
 }
-
-export default App;

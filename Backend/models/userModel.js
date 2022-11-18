@@ -19,8 +19,9 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
-      // minLength: [8, "password should be at least 8 characters"],
+      required: [true, "password cannot be empty"],
+      minLength: [8, "password should be at least 8 characters"],
+      trim: true,
     },
     publishedRecipe: [
       {

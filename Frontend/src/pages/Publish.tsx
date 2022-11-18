@@ -18,23 +18,9 @@ import { red, blue } from "@mui/material/colors";
 import { BoltOutlined } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
 import SelectCategory from "../components/SelectCategory";
-import IconButton from "@mui/material/IconButton";
+import Footer from "../components/Footer";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
-      {...props}
-    >
-      {"Copyright © "}
-      Recipe Blog {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
 const theme = createTheme({
   palette: {
@@ -170,7 +156,7 @@ export default function Publish() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-            <LockOutlinedIcon />
+            <HistoryEduIcon />
           </Avatar>
           <Typography
             component='h1'
@@ -223,7 +209,7 @@ export default function Publish() {
                     id='ethnicity'
                     name='ethnicity'
                     label='Ethnicity'
-                    placeholder='e.g. Assamese, Nepali, etc.'
+                    placeholder='e.g. Assamese'
                     value={formik.values.ethnicity}
                     onChange={formik.handleChange}
                     error={
@@ -345,7 +331,8 @@ export default function Publish() {
             </form>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+
+        <Footer />
       </Container>
     </ThemeProvider>
   );

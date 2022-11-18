@@ -17,6 +17,9 @@ import * as yup from "yup";
 import { red, blue } from "@mui/material/colors";
 import { BoltOutlined } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
+import { API } from "../lib/axios";
+import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 function Copyright(props: any) {
   return (
@@ -53,7 +56,7 @@ const theme = createTheme({
       // fontSize: 12,
       color: "#676A6B",
       fontWeight: 600,
-      width: "100vw",
+      width: "50vw",
       textAlign: "center",
       justifyContent: "center",
       mb: 2,
@@ -120,6 +123,8 @@ interface Values {
 }
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -129,9 +134,29 @@ export default function SignUp() {
     },
     validationSchema: validationSchema,
     onSubmit: (values: Values) => {
-      alert(JSON.stringify(values, null, 2));
+      CreateUser(values);
+      // alert(JSON.stringify(values, null, 2));
     },
   });
+
+  const CreateUser = (data: any) => {
+    {
+      console.log(data, "data");
+      try {
+        API.post("users/signup", data).then((res) => {
+          console.log(res.data);
+          // navigate("/login");
+          window.location.href = "/login";
+
+          // if (res.status === 201) {
+          //   navigate("/signin");
+          // }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
@@ -276,7 +301,7 @@ export default function SignUp() {
             </form>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        <Footer />
       </Container>
     </ThemeProvider>
   );

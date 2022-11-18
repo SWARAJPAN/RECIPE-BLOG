@@ -17,21 +17,10 @@ import * as yup from "yup";
 import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
 import { red } from "@mui/material/colors";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
-      {...props}
-    >
-      {"Copyright © "}
-      Recipe Blog {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { API } from "../lib/axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const theme = createTheme({
   palette: {
@@ -97,6 +86,10 @@ interface Values {
 }
 
 export default function SignIn() {
+  // const [token, setToken] = React.useState("");
+
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -104,9 +97,34 @@ export default function SignIn() {
     },
     validationSchema: validationSchema,
     onSubmit: (values: Values) => {
-      alert(JSON.stringify(values, null, 2));
+      LoginUser(values);
+
+      // alert(JSON.stringify(values, null, 2));
     },
   });
+
+  const LoginUser = (data: any) => {
+    {
+      // console.log(data, "data");
+      try {
+        API.post("users/login", data).then((res) => {
+          console.log(res.data.token);
+          // setToken(res.data.token);
+
+          if (res.status == 200) {
+            localStorage.setItem(
+              "token",
+              JSON.stringify({ token: res.data.token })
+            );
+            window.location.reload();
+            navigate("/publish");
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
@@ -201,7 +219,7 @@ export default function SignIn() {
             </form>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Footer />
       </Container>
     </ThemeProvider>
   );
