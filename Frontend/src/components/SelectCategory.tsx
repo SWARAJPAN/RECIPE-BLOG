@@ -19,18 +19,6 @@ const categoryType = [
     value: "Non-Vegetarian",
     label: "Non-Vegetarian",
   },
-  {
-    value: "Gluten-Free",
-    label: "Gluten-Free",
-  },
-  {
-    value: "Dairy-Free",
-    label: "Dairy-Free",
-  },
-  {
-    value: "Egg-Free",
-    label: "Egg-Free",
-  },
 ];
 
 const validationSchema = yup.object({
@@ -61,7 +49,7 @@ export default function SelectCategory() {
     <Box
       component='form'
       sx={{
-        "& .MuiTextField-root": { width: "22ch" },
+        "& .MuiTextField-root": { width: "29.9ch" },
         "@media (max-width:420px)": {
           "& .MuiTextField-root": { width: "17ch" },
         },
@@ -80,7 +68,7 @@ export default function SelectCategory() {
             onChange={handleChange}
             error={formik.touched.category && Boolean(formik.errors.category)}
             helperText={formik.touched.category && formik.errors.category}
-            variant='outlined'
+            variant='standard'
           >
             {categoryType.map((option) => (
               <MenuItem key={option.value} value={option.value}>

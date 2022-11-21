@@ -8,7 +8,9 @@ import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { AvatarGroup } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -16,7 +18,6 @@ import { NavLink } from "react-router-dom";
 import * as yup from "yup";
 import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
 import { red } from "@mui/material/colors";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { API } from "../lib/axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -145,11 +146,18 @@ export default function SignIn() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            gap: 3,
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-            <LockOpenIcon />
-          </Avatar>
+          <AvatarGroup max={2}>
+            <Avatar sx={{ bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Avatar sx={{ bgcolor: "primary.main", zIndex: "1" }}>
+              <LockOpenIcon />
+            </Avatar>
+          </AvatarGroup>
+
           <Typography component='h1' variant='h2'>
             Nice to see you!
           </Typography>
@@ -164,9 +172,7 @@ export default function SignIn() {
           >
             <form onSubmit={formik.handleSubmit}>
               <TextField
-                // sx={{
-                //   fieldset: { color: "info" },
-                // }}
+                variant='standard'
                 color='secondary'
                 margin='normal'
                 fullWidth
@@ -180,6 +186,7 @@ export default function SignIn() {
                 helperText={formik.touched.email && formik.errors.email}
               />
               <TextField
+                variant='standard'
                 color='secondary'
                 margin='normal'
                 fullWidth
@@ -200,7 +207,11 @@ export default function SignIn() {
                 type='submit'
                 fullWidth
                 variant='contained'
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 6,
+                  boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                }}
               >
                 Sign In
               </Button>
@@ -219,8 +230,8 @@ export default function SignIn() {
             </form>
           </Box>
         </Box>
-        <Footer />
       </Container>
+      <Footer />
     </ThemeProvider>
   );
 }

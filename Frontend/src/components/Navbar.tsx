@@ -154,6 +154,7 @@ export default function ResponsiveAppBar() {
                 color: "inherit",
                 textDecoration: "none",
                 justifyContent: "space-between",
+                alignContent: "center",
                 margin: "auto",
                 padding: "0 ",
               }}

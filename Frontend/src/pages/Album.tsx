@@ -18,17 +18,18 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { red, blue } from "@mui/material/colors";
 import { NavLink } from "react-router-dom";
 import Footer from "../components/Footer";
+import Divider from "@mui/material/Divider";
 
 const theme = createTheme({
   palette: {
     primary: {
       main: "#FF5757",
       light: red[400],
-      // main: red[100],
       dark: red[500],
       contrastText: "#fff",
     },
     secondary: {
+      light: "#d4d3d2",
       main: "#7F8284",
       dark: "#676A6B",
       contrastText: "#fff",
@@ -44,9 +45,7 @@ const theme = createTheme({
       textAlign: "center",
       // display: "flex",
       // width: "50vw",
-
       justifyContent: "center",
-
       "@media (max-width:420px)": {
         fontSize: "1.4rem",
       },
@@ -54,26 +53,11 @@ const theme = createTheme({
     subtitle1: {
       mt: 2,
       marginBottom: "1rem",
-      fontWeight: "bold",
 
       color: "#7F8284",
       "@media (max-width:420px)": {
         lineHeight: "1.3rem",
       },
-    },
-
-    button: {
-      fontSize: 16,
-      fontWeight: "bold",
-      textTransform: "none",
-      padding: "10px 20px",
-      fontFamily: "arial",
-      backgroundColor: "primary.light",
-      borderRadius: "20px",
-      // backgroundColor: "#676A6B",
-      // "&:focus": {
-      //   backgroundColor: "#676A6B",
-      // },
     },
   },
 });
@@ -86,15 +70,14 @@ export default function Album() {
       <CssBaseline />
 
       <main>
-        {/* Hero unit */}
         <Box
           sx={{
             // bgcolor: "background.blue",
             pt: 8,
-            pb: 6,
+            pb: 4,
           }}
         >
-          <Container maxWidth='sm'>
+          <Container maxWidth='md'>
             <Typography
               component='h1'
               variant='h2'
@@ -105,9 +88,10 @@ export default function Album() {
             </Typography>
           </Container>
         </Box>
-        <Container sx={{ py: 3 }} maxWidth='lg'>
+        {/* <Divider /> */}
+        <Container sx={{ py: 8 }} maxWidth='lg'>
           {/* End hero unit */}
-          <Grid container spacing={5} marginBottom={-10}>
+          <Grid container spacing={5}>
             {cards.map((card) => (
               <Grid item key={card} xs={12} sm={6} md={4}>
                 <Card
@@ -117,6 +101,14 @@ export default function Album() {
                     flexDirection: "column",
                     boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
                     borderRadius: "10px",
+
+                    transition: "all 0.2s ease-in-out",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                      opacity: 0.9,
+
+                      // scale: "1.1",
+                    },
                   }}
                 >
                   <CardMedia
@@ -139,9 +131,17 @@ export default function Album() {
                       size='medium'
                       sx={{
                         justifyContent: "center",
+
                         margin: "auto",
                         minWidth: "100%",
-                        borderRadius: "10px",
+                        fontWeight: "bold",
+                        borderRadius: "6px",
+                        border: "1px solid",
+
+                        "&:hover": {
+                          backgroundColor: "primary.main",
+                          color: "white",
+                        },
                       }}
                     >
                       View
@@ -155,9 +155,9 @@ export default function Album() {
         <Typography
           variant='subtitle1'
           align='center'
-          color='text.secondary'
-          paragraph
-          sx={{ mt: 10 }}
+          // color='text.secondary'
+
+          sx={{ mt: 4 }}
         >
           If you want to share your own recipe with us, please.{" "}
           <NavLink to='/signup'>

@@ -21,6 +21,8 @@ import SelectCategory from "../components/SelectCategory";
 import Footer from "../components/Footer";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import Divider from "@mui/material/Divider";
+import Chip from "@mui/material/Chip";
 
 const theme = createTheme({
   palette: {
@@ -28,6 +30,7 @@ const theme = createTheme({
       main: "#FF5757",
       // main: red[100],
       dark: red[500],
+      light: red[200],
       contrastText: "#fff",
     },
     secondary: {
@@ -143,7 +146,7 @@ export default function Publish() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component='main' maxWidth='xs'>
+      <Container component='main' maxWidth='sm'>
         <CssBaseline />
         <Box
           sx={{
@@ -155,7 +158,7 @@ export default function Publish() {
             textAlign: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+          <Avatar sx={{ m: 1, mb: 2, bgcolor: "primary.main" }}>
             <HistoryEduIcon />
           </Avatar>
           <Typography
@@ -180,9 +183,10 @@ export default function Publish() {
             sx={{ mt: 3 }}
           >
             <form onSubmit={formik.handleSubmit}>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} rowGap={1}>
                 <Grid item xs={12}>
                   <TextField
+                    variant='standard'
                     autoFocus
                     fullWidth
                     color='secondary'
@@ -205,11 +209,13 @@ export default function Publish() {
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <TextField
+                    variant='standard'
+                    fullWidth
                     color='secondary'
                     id='ethnicity'
                     name='ethnicity'
                     label='Ethnicity'
-                    placeholder='e.g. Assamese'
+                    placeholder='e.g. Assamese, Nepali, Garo, etc.'
                     value={formik.values.ethnicity}
                     onChange={formik.handleChange}
                     error={
@@ -223,12 +229,14 @@ export default function Publish() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
+                    variant='standard'
                     fullWidth
                     color='secondary'
                     id='ingredients'
                     name='ingredients'
                     label='Ingredients'
                     placeholder='Enter ingredients separated by commas'
+                    multiline
                     value={formik.values.ingredients}
                     onChange={formik.handleChange}
                     error={
@@ -242,6 +250,7 @@ export default function Publish() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
+                    variant='standard'
                     fullWidth
                     color='secondary'
                     id='description'
@@ -264,6 +273,7 @@ export default function Publish() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
+                    variant='standard'
                     fullWidth
                     color='secondary'
                     id='instruction'
@@ -292,7 +302,15 @@ export default function Publish() {
                     fullWidth
                     sx={{
                       justifyContent: "space-between",
-                      //   color: "#676A6B",
+                      mt: 1,
+                      mb: 3,
+
+                      "&:hover": {
+                        borderColor: "secondary.main",
+                        backgroundColor: "secondary.light",
+
+                        color: "white",
+                      },
                     }}
                     placeholder='Upload Image'
                   >
@@ -312,13 +330,17 @@ export default function Publish() {
                 type='submit'
                 fullWidth
                 variant='contained'
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                }}
               >
                 Publish!
               </Button>
               <Grid container justifyContent='center'>
                 <Grid item>
-                  <Typography variant='subtitle1'>
+                  <Typography variant='subtitle1' sx={{ mt: 3 }}>
                     Don't have an account?{" "}
                     <NavLink to='/signup'>
                       <Link variant='body1' fontWeight={"bold"}>
@@ -331,9 +353,8 @@ export default function Publish() {
             </form>
           </Box>
         </Box>
-
-        <Footer />
       </Container>
+      <Footer />
     </ThemeProvider>
   );
 }

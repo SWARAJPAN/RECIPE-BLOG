@@ -9,6 +9,7 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -20,21 +21,11 @@ import { NavLink } from "react-router-dom";
 import { API } from "../lib/axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
-
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
-      {...props}
-    >
-      {"Copyright © "}
-      Recipe Blog {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+// import Lottie from "react-lottie";
+// import Lottie from "react-lottie";
+import { Player } from "@lottiefiles/react-lottie-player";
+import Lock from "../assets/whiteLock.json";
+import { AvatarGroup } from "@mui/material";
 
 const theme = createTheme({
   palette: {
@@ -174,16 +165,23 @@ export default function SignUp() {
         <Box
           sx={{
             marginTop: 6,
-
+            gap: 2,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textAlign: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
+          <AvatarGroup max={2}>
+            <Avatar sx={{ bgcolor: "primary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+
+            <Avatar sx={{ bgcolor: "secondary.main" }}>
+              <LockOpenIcon />
+            </Avatar>
+          </AvatarGroup>
+
           <Typography
             component='h1'
             variant='h2'
@@ -205,9 +203,10 @@ export default function SignUp() {
             sx={{ mt: 3 }}
           >
             <form onSubmit={formik.handleSubmit}>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} rowGap={1}>
                 <Grid item xs={12} sm={6}>
                   <TextField
+                    variant='standard'
                     color='secondary'
                     autoComplete='given-name'
                     name='firstName'
@@ -228,6 +227,7 @@ export default function SignUp() {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
+                    variant='standard'
                     color='secondary'
                     fullWidth
                     id='lastName'
@@ -246,6 +246,7 @@ export default function SignUp() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
+                    variant='standard'
                     color='secondary'
                     fullWidth
                     id='email'
@@ -260,6 +261,7 @@ export default function SignUp() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
+                    variant='standard'
                     color='secondary'
                     fullWidth
                     name='password'
@@ -282,7 +284,11 @@ export default function SignUp() {
                 type='submit'
                 fullWidth
                 variant='contained'
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 4,
+                  mb: 6,
+                  boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                }}
               >
                 Sign Up!
               </Button>
@@ -301,8 +307,8 @@ export default function SignUp() {
             </form>
           </Box>
         </Box>
-        <Footer />
       </Container>
+      <Footer />
     </ThemeProvider>
   );
 }

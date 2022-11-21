@@ -16,7 +16,9 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { red, blue } from "@mui/material/colors";
-import { NavLink } from "react-router-dom";
+import Divider from "@mui/material/Divider";
+import { Player } from "@lottiefiles/react-lottie-player";
+import FooterBg from "../assets/footer.json";
 
 function Copyright(props: any) {
   return (
@@ -38,15 +40,30 @@ export default function Footer() {
     <>
       {/* Footer */}
 
-      <Box sx={{ bgcolor: "background.paper", mt: 8 }} component='footer'>
-        <Typography
+      <Box sx={{ bgcolor: "background.paper", mt: 5 }} component='footer'>
+        <Divider
+          sx={{
+            mt: 2,
+            mb: 4,
+            justifyContent: "center",
+            display: "flex",
+          }}
+        />
+        <Player
+          autoplay
+          loop
+          src={FooterBg}
+          style={{ overflow: "clip", height: "200px", widows: "100%" }}
+        />
+
+        {/* <Typography
           variant='subtitle1'
           align='center'
           color='text.secondary'
           component='p'
         >
-          Something here to give the footer a purpose!
-        </Typography>
+          
+          </Typography> */}
         <Copyright />
       </Box>
     </>
