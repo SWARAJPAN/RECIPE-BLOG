@@ -49,13 +49,17 @@ export default function Footer() {
             display: "flex",
           }}
         />
-        <Player
+        {/* <Player
           autoplay
           loop
           src={FooterBg}
-          style={{ overflow: "clip", height: "200px", widows: "100%" }}
-        />
-
+          style={{
+            overflow: "hidden",
+            // zIndex: "4",
+            height: "200px",
+            width: "100%",
+          }}
+        /> */}
         <Typography
           variant='subtitle1'
           align='center'

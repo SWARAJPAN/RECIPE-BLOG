@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Publish from "./pages/Publish";
+import DetailPage from "./pages/DetailPage";
 
 export default function App() {
   return (
@@ -20,7 +21,7 @@ export default function App() {
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
-
+          <Route path='/detail' element={<DetailPage />} />
           <Route path='/publish' element={<Publish />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/signin' element={<SignIn />} />

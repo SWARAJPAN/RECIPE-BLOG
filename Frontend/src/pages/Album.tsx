@@ -16,7 +16,7 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { red, blue } from "@mui/material/colors";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Divider from "@mui/material/Divider";
 
@@ -65,6 +65,8 @@ const theme = createTheme({
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Album() {
+  const navigate = useNavigate();
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -117,7 +119,7 @@ export default function Album() {
                       // 16: 9,
                       overflow: "hidden",
                     }}
-                    image='https://source.unsplash.com/random'
+                    image='https://source.unsplash.com/random?recipe'
                     alt='random'
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
@@ -143,6 +145,7 @@ export default function Album() {
                           color: "white",
                         },
                       }}
+                      onClick={() => navigate("/detail")}
                     >
                       View
                     </Button>
