@@ -3,24 +3,24 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
+import { NavLink } from "react-router-dom";
 import * as yup from "yup";
 import { red, blue } from "@mui/material/colors";
-import { BoltOutlined } from "@mui/icons-material";
-import { NavLink } from "react-router-dom";
 import SelectCategory from "../components/SelectCategory";
 import Footer from "../components/Footer";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
+import { BoltOutlined } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 
@@ -317,7 +317,7 @@ export default function Publish() {
                     <PhotoCamera /> <Typography>Upload Image</Typography>
                     <input
                       hidden
-                      accept='image/*'
+                      accept='image/png, image/jpeg, image/jpg, image/gif,'
                       multiple
                       type='file'
                       style={{ display: "none" }}

@@ -56,14 +56,14 @@ export default function Footer() {
           style={{ overflow: "clip", height: "200px", widows: "100%" }}
         />
 
-        {/* <Typography
+        <Typography
           variant='subtitle1'
           align='center'
           color='text.secondary'
           component='p'
         >
-          
-          </Typography> */}
+          Made with ❤️ by Swaraj 🍕
+        </Typography>
         <Copyright />
       </Box>
     </>

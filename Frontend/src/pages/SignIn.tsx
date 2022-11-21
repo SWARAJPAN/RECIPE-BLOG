@@ -158,7 +158,7 @@ export default function SignIn() {
             </Avatar>
           </AvatarGroup>
 
-          <Typography component='h1' variant='h2'>
+          <Typography component='h1' variant='h2' sx={{ width: "40vw" }}>
             Nice to see you!
           </Typography>
           <Typography component='h1' variant='subtitle1'>
