@@ -12,21 +12,27 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Publish from "./pages/Publish";
 import DetailPage from "./pages/DetailPage";
+import Album from "./pages/Album";
+import { RecoilRoot } from "recoil";
 
 export default function App() {
   return (
     <>
       {/* <Home /> */}
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/detail' element={<DetailPage />} />
-          <Route path='/publish' element={<Publish />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/signin' element={<SignIn />} />
-        </Routes>
-      </BrowserRouter>
+      <RecoilRoot>
+        {/* RecoilRoot is a wrapper for the entire app */}
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path='/' element={<Home />} />
+
+            <Route path='/detail/:id' element={<DetailPage />} />
+            <Route path='/publish' element={<Publish />} />
+            <Route path='/signup' element={<SignUp />} />
+            <Route path='/signin' element={<SignIn />} />
+          </Routes>
+        </BrowserRouter>
+      </RecoilRoot>
     </>
   );
 }

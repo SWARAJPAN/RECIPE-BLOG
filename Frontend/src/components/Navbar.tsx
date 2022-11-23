@@ -75,15 +75,20 @@ const pages = [
   },
 ];
 
+const getTokenFromLocalStorage = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    return JSON.parse(token);
+  } else {
+    return null;
+  }
+};
+
 export default function ResponsiveAppBar() {
-  const [login, setLogin] = useState(
-    JSON.parse(localStorage.getItem("token") || "{}")
-  );
-  const [show, setshow] = useState<boolean>(true);
+  const [login, setLogin] = useState(getTokenFromLocalStorage);
 
-  console.log(login);
+  console.log(login, "token from nav");
 
-  console.log(login.token, "token from nav");
   return (
     <ThemeProvider theme={theme}>
       <AppBar
@@ -128,14 +133,17 @@ export default function ResponsiveAppBar() {
                 letterSpacing: ".1rem",
                 color: "inherit",
               }}
-              style={{ textDecoration: "none" }}
+              style={{
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
             >
               RECIPES
             </Typography>
 
             <RamenDiningIcon
               sx={{
-                display: { xs: "flex", md: "none" },
+                display: { xs: "none", md: "none" },
                 mr: 0.5,
               }}
             />
@@ -156,7 +164,6 @@ export default function ResponsiveAppBar() {
                 justifyContent: "space-between",
                 alignContent: "center",
                 margin: "auto",
-                padding: "0 ",
               }}
               style={{ textDecoration: "none" }}
             >
@@ -176,19 +183,21 @@ export default function ResponsiveAppBar() {
                   style={{ textDecoration: "none", color: "#ffff" }}
                   key={page.title}
                 >
-                  <Button
-                    key={page.id}
-                    sx={{
-                      // my: 2,
-                      borderRadius: 2,
-                      margin: "0",
-                      color: "inherit",
-                      display: "block",
-                      padding: "4px 20px",
-                    }}
-                  >
-                    {page.title}
-                  </Button>
+                  {login && page.title === "Sign-In" ? null : (
+                    <Button
+                      key={page.id}
+                      sx={{
+                        // my: 2,
+                        borderRadius: 2,
+                        margin: "0",
+                        color: "inherit",
+                        display: "block",
+                        padding: "4px 20px",
+                      }}
+                    >
+                      {page.title}
+                    </Button>
+                  )}
                 </Link>
               ))}
             </Box>
@@ -200,11 +209,7 @@ export default function ResponsiveAppBar() {
                 display: { xs: "block", md: "flex" },
               }}
             >
-              {JSON.stringify(login) === JSON.stringify({}) ? (
-                ""
-              ) : (
-                <AccountMenu />
-              )}
+              {login ? <AccountMenu /> : null}
             </Box>
           </Toolbar>
         </Container>

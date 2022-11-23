@@ -17,7 +17,7 @@ const getAllRecipe = async (req, res) => {
 
 //create a new Recipe
 const createRecipe = async (req, res) => {
-  console.log("1");
+  console.log("create recipe hit");
   try {
     const recipe = await Recipes.create(req.body);
     console.log(recipe);

@@ -14,9 +14,40 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import RamenDiningIcon from "@mui/icons-material/RamenDining";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { NavLink } from "react-router-dom";
 // import { NavLink } from "react-router-dom";
+import { red, blue } from "@mui/material/colors";
+import { useState } from "react";
+import { Login } from "@mui/icons-material";
 
-const settings = ["Publishes", "Bookmarks", "Logout"];
+const logout = () => {
+  console.log("logout");
+  localStorage.removeItem("token");
+  window.location.reload();
+};
+
+const settings = [
+  {
+    id: 1,
+    title: "Publishes",
+    path: "/userpublishes",
+  },
+  {
+    id: 2,
+    title: "Bookmarks",
+    path: "/userbookmarks",
+  },
+
+  {
+    id: 3,
+    title: "Logout",
+    path: "/",
+    onClick: logout,
+  },
+];
+// const [login, setLogin] = useState(
+//   JSON.parse(localStorage.getItem("token") || "{}")
+// );
 
 export default function AccountMenu() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -68,11 +99,34 @@ export default function AccountMenu() {
         onClose={handleCloseUserMenu}
       >
         {settings.map((setting) => (
-          // <NavLink to={`/${setting}`} key={setting}>
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-            <Typography textAlign='center'>{setting}</Typography>
-          </MenuItem>
-          // </NavLink>
+          // <Link to={`${setting.path}`}>
+          <NavLink
+            to={`/${setting.path}`}
+            key={setting.title}
+            style={{
+              textDecoration: "none",
+              color: "black",
+            }}
+          >
+            <MenuItem
+              key={setting.id}
+              onClick={() => {
+                setting.onClick && setting.onClick();
+                handleCloseUserMenu();
+              }}
+            >
+              <Typography
+                textAlign='center'
+                sx={{
+                  "&:hover": {
+                    color: red[500],
+                  },
+                }}
+              >
+                {setting.title}
+              </Typography>
+            </MenuItem>
+          </NavLink>
         ))}
       </Menu>
     </Box>

@@ -12,17 +12,22 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { NavLink } from "react-router-dom";
 import * as yup from "yup";
 import { red, blue } from "@mui/material/colors";
-import SelectCategory from "../components/SelectCategory";
+
 import Footer from "../components/Footer";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import { Player } from "@lottiefiles/react-lottie-player";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import Register from "../assets/publish.json";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+
 import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
 import { BoltOutlined } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
+
+import { API } from "../lib/axios";
+import { MenuItem } from "@mui/material";
 
 const theme = createTheme({
   palette: {
@@ -79,8 +84,39 @@ const theme = createTheme({
   },
 });
 
+const categoryType = [
+  {
+    value: "Vegan",
+    label: "Vegan",
+  },
+  {
+    value: "Vegetarian",
+    label: "Vegetarian",
+  },
+  {
+    value: "Non-Vegetarian",
+    label: "Non-Vegetarian",
+  },
+  {
+    value: "Eggless",
+    label: "Eggless",
+  },
+  {
+    value: "Gluten Free",
+    label: "Gluten Free",
+  },
+  {
+    value: "Dairy Free",
+    label: "Dairy Free",
+  },
+  {
+    value: "Sugar Free",
+    label: "Sugar Free",
+  },
+];
+
 const validationSchema = yup.object({
-  recipeName: yup
+  name: yup
     .string()
     .min(3, "Must be at least 3 characters")
     .max(20, "Must be less  than 20 characters")
@@ -89,6 +125,7 @@ const validationSchema = yup.object({
     .trim("Cannot contain spaces"),
   description: yup
     .string()
+    .required("Description is required")
     .min(20, "Must be at least 20 characters")
     .max(100, "Must be less  than 100 characters")
     .trim("Cannot contain spaces"),
@@ -110,30 +147,52 @@ const validationSchema = yup.object({
     .min(20, "Must be at least 20 characters")
     .required("Plsease provide an instruction")
     .trim("Cannot contain spaces"),
+  category: yup.string().required("Please select a category"),
 });
 
 interface Values {
-  recipeName: string;
+  name: string;
   description: string;
   ingredients: string;
   ethnicity: string;
   instruction: string;
+  category: string;
 }
 
 export default function Publish() {
   const formik = useFormik({
     initialValues: {
-      recipeName: "",
+      name: "",
       description: "",
       ingredients: "",
       ethnicity: "",
       instruction: "",
+      category: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values: Values) => {
-      alert(JSON.stringify(values, null, 2));
+      PublishRecipe(values);
+      // alert(JSON.stringify(values, null, 2));
     },
   });
+  const PublishRecipe = (data: any) => {
+    {
+      // console.log(data, "data");
+      try {
+        API.post("recipes", data).then((res) => {
+          console.log(res);
+          // console.log(res.data, "show someting");
+
+          // if (res.status === 201) {
+          //   console.log(res.data, "published");
+          //   alert("Recipe published successfully");
+          // }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
@@ -158,7 +217,20 @@ export default function Publish() {
             textAlign: "center",
           }}
         >
-          <Avatar sx={{ m: 1, mb: 2, bgcolor: "primary.main" }}>
+          <Avatar
+            sx={{
+              m: 1,
+              mb: 2,
+              bgcolor: "primary.main",
+              transform: "scale(1.3)",
+            }}
+          >
+            {/* <Player
+            autoplay
+            loop
+            src={Register}
+            style={{ height: "200px", width: "200px" }}
+          /> */}
             <HistoryEduIcon />
           </Avatar>
           <Typography
@@ -190,22 +262,48 @@ export default function Publish() {
                     autoFocus
                     fullWidth
                     color='secondary'
-                    name='recipeName'
-                    id='recipeName'
+                    name='name'
+                    id='name'
                     label='Recipe Name'
-                    value={formik.values.recipeName}
+                    value={formik.values.name}
                     onChange={formik.handleChange}
-                    error={
-                      formik.touched.recipeName &&
-                      Boolean(formik.errors.recipeName)
-                    }
-                    helperText={
-                      formik.touched.recipeName && formik.errors.recipeName
-                    }
+                    error={formik.touched.name && Boolean(formik.errors.name)}
+                    helperText={formik.touched.name && formik.errors.name}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
-                  <SelectCategory />
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  sx={{
+                    "& .MuiTextField-root": { width: "29.9ch" },
+                    "@media (max-width:420px)": {
+                      "& .MuiTextField-root": { width: "17ch" },
+                    },
+                  }}
+                >
+                  <TextField
+                    id='outlined-select-category'
+                    select
+                    name='category'
+                    label='Category'
+                    color='secondary'
+                    value={formik.values.category}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.category && Boolean(formik.errors.category)
+                    }
+                    helperText={
+                      formik.touched.category && formik.errors.category
+                    }
+                    variant='standard'
+                  >
+                    {categoryType.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <TextField

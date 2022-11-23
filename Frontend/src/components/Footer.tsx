@@ -40,7 +40,13 @@ export default function Footer() {
     <>
       {/* Footer */}
 
-      <Box sx={{ bgcolor: "background.paper", mt: 5 }} component='footer'>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          mt: 8,
+        }}
+        component='footer'
+      >
         <Divider
           sx={{
             mt: 2,

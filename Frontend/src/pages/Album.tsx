@@ -15,17 +15,20 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { red, blue } from "@mui/material/colors";
+import { red, orange } from "@mui/material/colors";
 import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Divider from "@mui/material/Divider";
+import { useState, useEffect } from "react";
+import { API } from "../lib/axios";
+import { useParams } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
     primary: {
       main: "#FF5757",
       light: red[400],
-      dark: red[500],
+      dark: orange[900],
       contrastText: "#fff",
     },
     secondary: {
@@ -62,10 +65,20 @@ const theme = createTheme({
   },
 });
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 export default function Album() {
   const navigate = useNavigate();
+
+  const [recipes, setRecipes] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    API.get("recipes?sort={'createdAt':-1}").then((res) => {
+      setRecipes(res.data.recipe);
+      console.log(res.data.recipe);
+    });
+  }, []);
+
+  console.log(recipes);
 
   return (
     <ThemeProvider theme={theme}>
@@ -87,72 +100,101 @@ export default function Album() {
               gutterBottom
             >
               Find your next recipe!
+              {recipes.ame}
             </Typography>
           </Container>
         </Box>
         {/* <Divider /> */}
         <Container sx={{ py: 8 }} maxWidth='lg'>
-          {/* End hero unit */}
           <Grid container spacing={5}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card
-                  sx={{
-                    maxHeight: "75%",
-                    display: "flex",
-                    flexDirection: "column",
-                    boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
-                    borderRadius: "10px",
+            {/* <-----------------  Here is the map  -----------------> */}
 
-                    transition: "all 0.2s ease-in-out",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                      opacity: 0.9,
-
-                      // scale: "1.1",
-                    },
-                  }}
-                >
-                  <CardMedia
-                    component='img'
+            {recipes.map((recipe: any) => {
+              return (
+                <Grid item key={recipes._id} xs={12} sm={6} md={4}>
+                  <Card
                     sx={{
-                      // 16: 9,
-                      overflow: "hidden",
+                      maxHeight: "75%",
+                      display: "flex",
+                      flexDirection: "column",
+                      boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                      borderRadius: "10px",
+
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                        opacity: 0.9,
+
+                        // scale: "1.1",
+                      },
                     }}
-                    image='https://source.unsplash.com/random?recipe'
-                    alt='random'
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant='subtitle1' component='h2'>
-                      Heading
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      variant='outlined'
-                      size='medium'
+                  >
+                    <CardMedia
+                      component='img'
                       sx={{
-                        justifyContent: "center",
-
-                        margin: "auto",
-                        minWidth: "100%",
-                        fontWeight: "bold",
-                        borderRadius: "6px",
-                        border: "1px solid",
-
-                        "&:hover": {
-                          backgroundColor: "primary.main",
-                          color: "white",
-                        },
+                        // 16: 9,
+                        overflow: "hidden",
                       }}
-                      onClick={() => navigate("/detail")}
-                    >
-                      View
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
+                      image='https://source.unsplash.com/random?recipe'
+                      alt='random'
+                    />
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography
+                          gutterBottom
+                          variant='subtitle1'
+                          component='h2'
+                          color='black'
+                        >
+                          {recipe.name}
+                        </Typography>
+                        <Typography
+                          gutterBottom
+                          variant='subtitle1'
+                          component='h2'
+                        >
+                          {recipe.cuisineTag}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                    <CardActions>
+                      <NavLink
+                        to={`/detail/${recipe._id}`}
+                        style={{ textDecoration: "none", minWidth: "100%" }}
+                      >
+                        <Button
+                          variant='outlined'
+                          size='medium'
+                          sx={{
+                            justifyContent: "center",
+
+                            margin: "auto",
+                            minWidth: "100%",
+                            fontWeight: "bold",
+                            borderRadius: "6px",
+                            border: "1px solid",
+
+                            "&:hover": {
+                              backgroundColor: "primary.main",
+                              color: "white",
+                            },
+                          }}
+                          onClick={() => navigate(`detail/${recipe._id}`)}
+                        >
+                          View
+                        </Button>
+                      </NavLink>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              );
+            })}
           </Grid>
         </Container>
         <Typography

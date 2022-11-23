@@ -31,6 +31,7 @@ const signUp = async (req, res, next) => {
 
 //user login
 const logIn = async (req, res, next) => {
+  console.log("signin hit");
   Users.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
@@ -49,8 +50,10 @@ const logIn = async (req, res, next) => {
           const token = jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
             expiresIn: "24h",
           });
+          console.log(token);
 
-          res.status(200).json({
+          res.status(201).json({
+            message: "User loged in successfully!",
             userId: user._id,
             token: token,
           });

@@ -137,11 +137,11 @@ export default function SignUp() {
         API.post("users/signup", data).then((res) => {
           console.log(res.data);
           // navigate("/login");
-          window.location.href = "/login";
+          // window.location.href = "/login";
 
-          // if (res.status === 201) {
-          //   navigate("/signin");
-          // }
+          if (res.status === 201) {
+            navigate("/signin");
+          }
         });
       } catch (err) {
         console.log(err);
@@ -173,11 +173,41 @@ export default function SignUp() {
           }}
         >
           <AvatarGroup max={2}>
-            <Avatar sx={{ bgcolor: "primary.main" }}>
+            <Avatar
+              sx={{
+                bgcolor: "primary.main",
+                transform: "scale(1.2)",
+                animation: "lock 0.5s ",
+                " @keyframes lock": {
+                  "0%": {
+                    transform: "translateX(50%)  ",
+                  },
+
+                  "100%": {
+                    transform: "translateX(0%) scale(1.2)",
+                  },
+                },
+              }}
+            >
               <LockOutlinedIcon />
             </Avatar>
 
-            <Avatar sx={{ bgcolor: "secondary.main" }}>
+            <Avatar
+              sx={{
+                bgcolor: "secondary.main",
+                transform: "scale(0.9)",
+                animation: "lockOpen 0.5s ",
+                " @keyframes lockOpen": {
+                  "0%": {
+                    transform: "scale(1)  ",
+                  },
+
+                  "100%": {
+                    transform: " scale(0.9)",
+                  },
+                },
+              }}
+            >
               <LockOpenIcon />
             </Avatar>
           </AvatarGroup>

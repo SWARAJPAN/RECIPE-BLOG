@@ -15,11 +15,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { NavLink } from "react-router-dom";
 import Footer from "../components/Footer";
 import { red } from "@mui/material/colors";
-import { API } from "../lib/axios";
+
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import Divider from "@mui/material/Divider";
+import { useState, useEffect } from "react";
+import { API } from "../lib/axios";
+import { useParams } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -65,7 +68,8 @@ const theme = createTheme({
     },
 
     button: {
-      fontSize: 16,
+      fontSize: 20,
+
       fontWeight: "bold",
       textTransform: "none",
       padding: "10px 20px",
@@ -83,6 +87,23 @@ const theme = createTheme({
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function DetailPage() {
+  const params = useParams();
+  const id = params.id;
+  console.log(id);
+
+  const [detailRecipe, setDetailRecipe] = useState<any>([]);
+
+  useEffect(() => {
+    API.get(`recipes/${id}`)
+      .then((res) => {
+        console.log(res.data.recipe);
+        setDetailRecipe(res.data.recipe);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -105,10 +126,14 @@ export default function DetailPage() {
         >
           <Grid item xs={12} sm={6} xl={6}>
             <Typography variant='h3' gutterBottom>
-              Recipe name.
+              {/* Recipe name. */}
+              {detailRecipe.name}
             </Typography>
             <Typography variant='subtitle1' gutterBottom>
-              by <span style={{ color: "#CB692D" }}>Author</span>
+              by{" "}
+              <span style={{ color: "#CB692D" }}>
+                {detailRecipe.publishedBy}
+              </span>
             </Typography>
             <Grid
               item
@@ -121,13 +146,15 @@ export default function DetailPage() {
               mt={4}
             >
               <Typography variant='body1' gutterBottom>
-                Category
+                Category {detailRecipe.category}
               </Typography>
               <Typography variant='body1' gutterBottom>
-                Ethnicity
+                Ethnicity {detailRecipe.ethnicity}
               </Typography>
             </Grid>
-            <Typography variant='subtitle1'>Recipe description.</Typography>
+            <Typography variant='subtitle1'>
+              {detailRecipe.description}
+            </Typography>
             <Grid item container direction='column' xs={12} sm={12}>
               <Grid item>
                 <Typography variant='body1' gutterBottom>
@@ -136,7 +163,7 @@ export default function DetailPage() {
               </Grid>
               <Grid item>
                 <Typography variant='subtitle1' mb={4}>
-                  items. items. items.
+                  {detailRecipe.ingredients}
                 </Typography>
               </Grid>
             </Grid>
@@ -145,15 +172,7 @@ export default function DetailPage() {
                 Instruction:
               </Typography>
               <Typography variant='subtitle1'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                euismod, nunc ut aliquam aliquet, nunc elit aliquet nisl, sed
-                aliquam massa mauris eget lorem. Donec euismod, nunc ut aliquam
-                aliquet, nunc elit aliquet nisl, sed aliquam massa mauris eget
-                lorem. Donec euismod, nunc ut aliquam aliquet, nunc elit aliquet
-                nisl, sed aliquam massa mauris eget lorem. Donec euismod, nunc
-                ut aliquam aliquet, nunc elit aliquet nisl, sed aliquam massa
-                mauris eget lorem. Donec euismod, nunc ut aliquam aliquet, nunc
-                elit aliquet nisl, sed aliquam
+                {detailRecipe.instruction}
               </Typography>
               {/* <Divider /> */}
             </Grid>
@@ -167,6 +186,7 @@ export default function DetailPage() {
                   image='https://source.unsplash.com/random?food'
                   alt='pasta'
                   height='500'
+                  //   sx={{ boxShadow: "0" }}
                 />
               </Card>
               <Box
@@ -193,7 +213,8 @@ export default function DetailPage() {
                   size='small'
                   variant='outlined'
                   sx={{
-                    height: "40px",
+                    height: "2.5rem",
+                    lineHeight: "1rem",
                     width: "50%",
                     "&:hover": {
                       backgroundColor: "primary.main",

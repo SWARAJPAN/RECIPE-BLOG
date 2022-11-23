@@ -112,13 +112,10 @@ export default function SignIn() {
           console.log(res.data.token);
           // setToken(res.data.token);
 
-          if (res.status == 200) {
-            localStorage.setItem(
-              "token",
-              JSON.stringify({ token: res.data.token })
-            );
+          if (res.status == 201) {
+            localStorage.setItem("token", JSON.stringify(res.data.token));
+            navigate("/");
             window.location.reload();
-            navigate("/publish");
           }
         });
       } catch (err) {
@@ -150,10 +147,43 @@ export default function SignIn() {
           }}
         >
           <AvatarGroup max={2}>
-            <Avatar sx={{ bgcolor: "secondary.main" }}>
+            <Avatar
+              sx={{
+                bgcolor: "secondary.main",
+                transform: "scale(0.9)",
+                animation: "lockOut 0.5s ",
+                " @keyframes lockOut": {
+                  "0%": {
+                    transform: "scale(1)  ",
+                  },
+
+                  "100%": {
+                    transform: " scale(0.9)",
+                  },
+                },
+              }}
+            >
               <LockOutlinedIcon />
             </Avatar>
-            <Avatar sx={{ bgcolor: "primary.main", zIndex: "1" }}>
+            <Avatar
+              sx={{
+                bgcolor: "primary.main",
+                zIndex: "1",
+                position: "relative",
+                transform: "scale(1.2)",
+
+                animation: "bounce 0.5s ",
+                " @keyframes bounce": {
+                  "0%": {
+                    transform: "translateX(-50%)  ",
+                  },
+
+                  "100%": {
+                    transform: "translateX(0%) scale(1.2)",
+                  },
+                },
+              }}
+            >
               <LockOpenIcon />
             </Avatar>
           </AvatarGroup>
