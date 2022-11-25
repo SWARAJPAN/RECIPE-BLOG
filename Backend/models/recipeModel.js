@@ -32,11 +32,16 @@ const RecipeSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-
     publishedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
+    bookmarkedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
   },
   { timestamps: true }
 );

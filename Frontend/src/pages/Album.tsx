@@ -65,16 +65,32 @@ const theme = createTheme({
   },
 });
 
+const getTokenFromLocalStorage = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    return JSON.parse(token);
+  } else {
+    return null;
+  }
+};
+
 export default function Album() {
   const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState<any>([]);
   const [loading, setLoading] = useState(true);
+  const [login, setLogin] = useState(getTokenFromLocalStorage());
+
+  const [userName, setUserName] = useState<any>([]);
 
   useEffect(() => {
-    API.get("recipes?sort={'createdAt':-1}").then((res) => {
+    API.get("recipes?sort={'createdAt':-1}&limit=9").then((res) => {
       setRecipes(res.data.recipe);
       console.log(res.data.recipe);
+    });
+    API.get("users/").then((res) => {
+      console.log(res.data.user);
+      setUserName(res.data.user);
     });
   }, []);
 
@@ -100,14 +116,13 @@ export default function Album() {
               gutterBottom
             >
               Find your next recipe!
-              {recipes.ame}
             </Typography>
           </Container>
         </Box>
         {/* <Divider /> */}
         <Container sx={{ py: 8 }} maxWidth='lg'>
           <Grid container spacing={5}>
-            {/* <-----------------  Here is the map  -----------------> */}
+            {/* <-----------------  Here is the recipe map  -----------------> */}
 
             {recipes.map((recipe: any) => {
               return (
@@ -159,7 +174,7 @@ export default function Album() {
                           variant='subtitle1'
                           component='h2'
                         >
-                          {recipe.cuisineTag}
+                          {recipe.ethnicity}
                         </Typography>
                       </Box>
                     </CardContent>
@@ -185,7 +200,7 @@ export default function Album() {
                               color: "white",
                             },
                           }}
-                          onClick={() => navigate(`detail/${recipe._id}`)}
+                          // onClick={() => navigate(`detail/${recipe._id}`)}
                         >
                           View
                         </Button>
@@ -197,20 +212,38 @@ export default function Album() {
             })}
           </Grid>
         </Container>
-        <Typography
-          variant='subtitle1'
-          align='center'
-          // color='text.secondary'
+        {login ? (
+          <Typography
+            component='h1'
+            variant='subtitle1'
+            align='center'
+            display={{ xs: "block", sm: "block" }}
+            gutterBottom
+          >
+            Welcome{" "}
+            {/* <-----------------  Here is the user map  -----------------> */}
+            {userName.map((user: any) => {
+              {
+                user.email;
+              }
+            })}
+          </Typography>
+        ) : (
+          <Typography
+            variant='subtitle1'
+            align='center'
+            // color='text.secondary'
 
-          sx={{ mt: 4 }}
-        >
-          If you want to share your own recipe with us, please.{" "}
-          <NavLink to='/signup'>
-            <Link fontWeight={"bold"} variant='body1'>
-              Sign Up
-            </Link>
-          </NavLink>
-        </Typography>
+            sx={{ mt: 4 }}
+          >
+            If you want to share your own recipe with us, please{" "}
+            <NavLink to='/signup'>
+              <Link fontWeight={"bold"} variant='body1'>
+                Sign Up.
+              </Link>
+            </NavLink>
+          </Typography>
+        )}
       </main>
       <Footer />
     </ThemeProvider>

@@ -1,4 +1,5 @@
 const Users = require("../models/userModel");
+const Recipes = require("../models/recipeModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -51,12 +52,12 @@ const logIn = async (req, res, next) => {
             expiresIn: "24h",
           });
           console.log(token);
-
-          res.status(201).json({
-            message: "User loged in successfully!",
-            userId: user._id,
-            token: token,
-          });
+          console.log("user not found"),
+            res.status(201).json({
+              message: "User loged in successfully!",
+              userId: user._id,
+              token: token,
+            });
         })
         .catch((error) => {
           res.status(500).json({
@@ -74,7 +75,8 @@ const logIn = async (req, res, next) => {
 //get user
 const getUser = async (req, res) => {
   try {
-    const user = await Users.find({}); //.populate("publishedRecipe", "name"); --> to show recipe and its name as an object
+    const user = await Users.find({});
+    //.populate("publishedRecipe", "name"); --> to show recipe and its name as an object
     res.status(200).json({ message: "success", user, length: user.length });
   } catch (error) {
     res.status(500).json({ message: error });
@@ -150,6 +152,25 @@ const deleteUser = async (req, res) => {
   }
 };
 
+//get bookmarked recipe
+const getBookmarkedRecipe = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await Users.findById(userId).populate(
+      "bookmarkedRecipe",
+      "name"
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: `${userId} does not exist` });
+    }
+
+    res.status(200).json({ message: "found", user });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
 module.exports = {
   signUp,
   logIn,
@@ -157,4 +178,5 @@ module.exports = {
   getOneUser,
   updateUser,
   deleteUser,
+  getBookmarkedRecipe,
 };

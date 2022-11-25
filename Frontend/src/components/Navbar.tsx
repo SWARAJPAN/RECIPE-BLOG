@@ -17,7 +17,7 @@ import PublicMenu from "./PublicMenu";
 import { useState } from "react";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import { createTheme } from "@mui/material/styles";
-import { orange } from "@mui/material/colors";
+import { orange, red } from "@mui/material/colors";
 import { Link } from "react-router-dom";
 import { Logout } from "@mui/icons-material";
 

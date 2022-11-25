@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { red, blue } from "@mui/material/colors";
 
@@ -22,7 +22,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
 import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
-import { BoltOutlined } from "@mui/icons-material";
+import { BoltOutlined, DisabledByDefault } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 
@@ -42,6 +42,10 @@ const theme = createTheme({
       main: "#7F8284",
       dark: "#676A6B",
       contrastText: "#fff",
+    },
+    action: {
+      disabledBackground: red[100],
+      disabled: "#f57373",
     },
   },
 
@@ -101,18 +105,6 @@ const categoryType = [
     value: "Eggless",
     label: "Eggless",
   },
-  {
-    value: "Gluten Free",
-    label: "Gluten Free",
-  },
-  {
-    value: "Dairy Free",
-    label: "Dairy Free",
-  },
-  {
-    value: "Sugar Free",
-    label: "Sugar Free",
-  },
 ];
 
 const validationSchema = yup.object({
@@ -159,7 +151,20 @@ interface Values {
   category: string;
 }
 
+const getTokenFromLocalStorage = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    return JSON.parse(token);
+  } else {
+    return null;
+  }
+};
+
 export default function Publish() {
+  const [login, setLogin] = React.useState(getTokenFromLocalStorage);
+
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -175,6 +180,7 @@ export default function Publish() {
       // alert(JSON.stringify(values, null, 2));
     },
   });
+
   const PublishRecipe = (data: any) => {
     {
       // console.log(data, "data");
@@ -182,11 +188,13 @@ export default function Publish() {
         API.post("recipes", data).then((res) => {
           console.log(res);
           // console.log(res.data, "show someting");
+          // alert("Recipe published successfully");
 
-          // if (res.status === 201) {
-          //   console.log(res.data, "published");
-          //   alert("Recipe published successfully");
-          // }
+          if (res.status === 201) {
+            navigate("/userpublishes");
+            window.location.reload();
+            console.log(res.data, "published");
+          }
         });
       } catch (error) {
         console.log(error);
@@ -259,7 +267,7 @@ export default function Publish() {
                 <Grid item xs={12}>
                   <TextField
                     variant='standard'
-                    autoFocus
+                    // autoFocus
                     fullWidth
                     color='secondary'
                     name='name'
@@ -423,19 +431,32 @@ export default function Publish() {
                   </Button>
                 </Grid>
               </Grid>
+              {login ? (
+                <Button
+                  type='submit'
+                  fullWidth
+                  variant='contained'
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                  }}
+                >
+                  Publish!
+                </Button>
+              ) : (
+                <Button
+                  type='submit'
+                  fullWidth
+                  disabled
+                  variant='contained'
+                  // color='primary'
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  You need to Sign-In to Publish
+                </Button>
+              )}
 
-              <Button
-                type='submit'
-                fullWidth
-                variant='contained'
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
-                }}
-              >
-                Publish!
-              </Button>
               <Grid container justifyContent='center'>
                 <Grid item>
                   <Typography variant='subtitle1' sx={{ mt: 3 }}>

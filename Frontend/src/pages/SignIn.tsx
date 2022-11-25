@@ -10,7 +10,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { AvatarGroup } from "@mui/material";
+import { AvatarGroup, IconButton, InputAdornment } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -22,6 +22,7 @@ import { API } from "../lib/axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const theme = createTheme({
   palette: {
@@ -88,6 +89,9 @@ interface Values {
 
 export default function SignIn() {
   // const [token, setToken] = React.useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   const navigate = useNavigate();
 
@@ -222,7 +226,21 @@ export default function SignIn() {
                 fullWidth
                 name='password'
                 label='Password'
-                type='password'
+                type={showPassword ? "text" : "password"}
+                InputProps={{
+                  // <-- This is where the toggle button is added.
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        aria-label='toggle password visibility'
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 id='password'
                 autoComplete='current-password'
                 value={formik.values.password}

@@ -14,7 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import RamenDiningIcon from "@mui/icons-material/RamenDining";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 // import { NavLink } from "react-router-dom";
 import { red, blue } from "@mui/material/colors";
 import { useState } from "react";
@@ -100,8 +100,8 @@ export default function AccountMenu() {
       >
         {settings.map((setting) => (
           // <Link to={`${setting.path}`}>
-          <NavLink
-            to={`/${setting.path}`}
+          <Link
+            to={`${setting.path}`}
             key={setting.title}
             style={{
               textDecoration: "none",
@@ -126,7 +126,7 @@ export default function AccountMenu() {
                 {setting.title}
               </Typography>
             </MenuItem>
-          </NavLink>
+          </Link>
         ))}
       </Menu>
     </Box>

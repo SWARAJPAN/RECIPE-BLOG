@@ -14,6 +14,8 @@ import Publish from "./pages/Publish";
 import DetailPage from "./pages/DetailPage";
 import Album from "./pages/Album";
 import { RecoilRoot } from "recoil";
+import UserPublishes from "./pages/UserPublishes";
+import UserBookmarks from "./pages/UserBookmarks";
 
 export default function App() {
   return (
@@ -25,9 +27,10 @@ export default function App() {
           <Navbar />
           <Routes>
             <Route path='/' element={<Home />} />
-
+            <Route path='/userbookmarks' element={<UserBookmarks />} />
             <Route path='/detail/:id' element={<DetailPage />} />
             <Route path='/publish' element={<Publish />} />
+            <Route path='/userpublishes' element={<UserPublishes />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/signin' element={<SignIn />} />
           </Routes>

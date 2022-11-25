@@ -16,7 +16,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
 import * as yup from "yup";
 import { red, blue } from "@mui/material/colors";
-import { BoltOutlined } from "@mui/icons-material";
+import { BoltOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
 import { API } from "../lib/axios";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ import Footer from "../components/Footer";
 // import Lottie from "react-lottie";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Lock from "../assets/whiteLock.json";
-import { AvatarGroup } from "@mui/material";
+import { AvatarGroup, IconButton, InputAdornment } from "@mui/material";
 
 const theme = createTheme({
   palette: {
@@ -114,6 +114,10 @@ interface Values {
 }
 
 export default function SignUp() {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -296,7 +300,20 @@ export default function SignUp() {
                     fullWidth
                     name='password'
                     label='Password'
-                    type='password'
+                    type={showPassword ? "text" : "password"}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <IconButton
+                            aria-label='toggle password visibility'
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                     id='password'
                     autoComplete='new-password'
                     value={formik.values.password}

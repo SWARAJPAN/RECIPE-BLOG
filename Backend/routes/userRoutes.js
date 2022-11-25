@@ -5,8 +5,8 @@ const auth = require("../middleware/auth");
 
 const {
   getUser,
-
   getOneUser,
+  getBookmarkedRecipe,
   updateUser,
   deleteUser,
   logIn,
@@ -15,6 +15,7 @@ const {
 
 router.get("/users", getUser);
 router.get("/users/:id", getOneUser);
+router.get("/users/:id/bookmarked", getBookmarkedRecipe);
 router.patch("/users/:id", auth, updateUser);
 router.delete("/users/:id", auth, deleteUser);
 router.post("/users/signup", signUp);

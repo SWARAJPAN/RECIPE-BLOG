@@ -3,8 +3,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
+
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,10 +11,10 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { red } from "@mui/material/colors";
-
+import Link, { Chip, IconButton, Pagination } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
@@ -23,6 +22,10 @@ import Divider from "@mui/material/Divider";
 import { useState, useEffect } from "react";
 import { API } from "../lib/axios";
 import { useParams } from "react-router-dom";
+import Modal from "../components/ModalDialog";
+import ModalDialog from "../components/ModalDialog";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
 const theme = createTheme({
   palette: {
@@ -62,7 +65,7 @@ const theme = createTheme({
     },
     body1: {
       color: "#676A6B",
-      fontSize: "1rem",
+      fontSize: "0.9 rem",
       fontWeight: "bold",
       //   fontSize: "0.9rem",
     },
@@ -86,7 +89,23 @@ const theme = createTheme({
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
+const getTokenFromLocalStorage = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    return JSON.parse(token);
+  } else {
+    return null;
+  }
+};
+
 export default function DetailPage() {
+  const navigate = useNavigate();
+
+  const [login, setLogin] = React.useState(getTokenFromLocalStorage);
+
+  const [openModal, setOpenModal] = React.useState(false);
+  const [bookmarked, setBookmarked] = React.useState(false);
+
   const params = useParams();
   const id = params.id;
   console.log(id);
@@ -99,10 +118,26 @@ export default function DetailPage() {
         console.log(res.data.recipe);
         setDetailRecipe(res.data.recipe);
       })
+
       .catch((err) => {
         console.log(err);
       });
   }, []);
+
+  const handleBookmark = () => {
+    if (login) {
+      API.post(`recipes/${id}/bookmark`)
+        .then((res) => {
+          console.log(res.data);
+          setBookmarked(!bookmarked);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setOpenModal(true);
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -126,33 +161,65 @@ export default function DetailPage() {
         >
           <Grid item xs={12} sm={6} xl={6}>
             <Typography variant='h3' gutterBottom>
-              {/* Recipe name. */}
               {detailRecipe.name}
             </Typography>
             <Typography variant='subtitle1' gutterBottom>
               by{" "}
               <span style={{ color: "#CB692D" }}>
-                {detailRecipe.publishedBy}
+                {detailRecipe.publishedBy?.firstName}{" "}
+                {detailRecipe.publishedBy?.lastName}
               </span>
             </Typography>
             <Grid
               item
               container
               direction='row'
-              justifyContent='space-between'
-              xl={4}
+              justifyContent='space-evenly'
+              xl={5}
               xs={6}
-              mb={2}
-              mt={4}
+              md={8}
+              mb={3}
+              mt={3}
+              // width='40%'
+              sx={{
+                "@media (max-width:420px)": {
+                  justifyContent: "space-between",
+                  width: "100%",
+                },
+              }}
             >
               <Typography variant='body1' gutterBottom>
-                Category {detailRecipe.category}
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <LocalDiningIcon
+                    sx={{
+                      mr: "7px",
+                      "@media (max-width:420px)": {
+                        paddingLeft: "5px",
+                        mr: "5px",
+                      },
+                    }}
+                  />{" "}
+                  {detailRecipe.category}
+                </div>
               </Typography>
               <Typography variant='body1' gutterBottom>
-                Ethnicity {detailRecipe.ethnicity}
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <PeopleAltIcon
+                    sx={{
+                      mr: "7px",
+
+                      "@media (max-width:420px)": {
+                        paddingLeft: "5px",
+                        mr: "5px",
+                        ml: "2px",
+                      },
+                    }}
+                  />{" "}
+                  {detailRecipe.ethnicity}
+                </div>
               </Typography>
             </Grid>
-            <Typography variant='subtitle1'>
+            <Typography variant='subtitle1' mb={4}>
               {detailRecipe.description}
             </Typography>
             <Grid item container direction='column' xs={12} sm={12}>
@@ -209,7 +276,9 @@ export default function DetailPage() {
                     checkedIcon={<Favorite />}
                   />
                 </Typography>
+
                 <Button
+                  onClick={handleBookmark}
                   size='small'
                   variant='outlined'
                   sx={{
@@ -225,9 +294,14 @@ export default function DetailPage() {
                     },
                   }}
                 >
-                  <BookmarkIcon sx={{ marginRight: "5px" }} />
-                  Bookmark this recipe
+                  <BookmarkIcon sx={{ marginRight: "5px" }} />{" "}
+                  {bookmarked ? "Bookmarked! " : "Bookmark this recipe?"}
                 </Button>
+
+                <ModalDialog
+                  open={openModal}
+                  onClose={() => setOpenModal(false)}
+                />
               </Box>
             </Grid>
           </Grid>
