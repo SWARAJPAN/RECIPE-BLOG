@@ -22,6 +22,9 @@ import Divider from "@mui/material/Divider";
 import { useState, useEffect } from "react";
 import { API } from "../lib/axios";
 import { useParams } from "react-router-dom";
+import { Pagination } from "@mui/material";
+import RecipePagination from "../components/RecipePagination";
+import SearchBar from "../components/SearchBar";
 
 const theme = createTheme({
   palette: {
@@ -81,29 +84,25 @@ export default function Album() {
   const [loading, setLoading] = useState(true);
   const [login, setLogin] = useState(getTokenFromLocalStorage());
 
-  const [userName, setUserName] = useState<any>([]);
+  // const [userName, setUserName] = useState<any>([]);
 
   useEffect(() => {
     API.get("recipes?sort={'createdAt':-1}&limit=9").then((res) => {
       setRecipes(res.data.recipe);
       console.log(res.data.recipe);
     });
-    API.get("users/").then((res) => {
-      console.log(res.data.user);
-      setUserName(res.data.user);
-    });
   }, []);
 
-  console.log(recipes);
+  // console.log(recipes);
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
 
-      <main>
         <Box
           sx={{
-            // bgcolor: "background.blue",
+            bgcolor: "background.blue",
             pt: 8,
             pb: 4,
           }}
@@ -112,18 +111,18 @@ export default function Album() {
             <Typography
               component='h1'
               variant='h2'
-              display={{ xs: "block", sm: "block" }}
+              display={{ xs: "none", sm: "block" }}
               gutterBottom
             >
               Find your next recipe!
             </Typography>
           </Container>
         </Box>
-        {/* <Divider /> */}
-        <Container sx={{ py: 8 }} maxWidth='lg'>
-          <Grid container spacing={5}>
-            {/* <-----------------  Here is the recipe map  -----------------> */}
 
+        <SearchBar />
+
+        <Container sx={{ py: 8, mb: 2 }} maxWidth='lg'>
+          <Grid container spacing={5}>
             {recipes.map((recipe: any) => {
               return (
                 <Grid item key={recipes._id} xs={12} sm={6} md={4}>
@@ -134,25 +133,24 @@ export default function Album() {
                       flexDirection: "column",
                       boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
                       borderRadius: "10px",
-
                       transition: "all 0.2s ease-in-out",
                       "&:hover": {
                         transform: "scale(1.05)",
                         opacity: 0.9,
-
-                        // scale: "1.1",
+                        scale: "1.1",
                       },
                     }}
                   >
                     <CardMedia
                       component='img'
                       sx={{
-                        // 16: 9,
+                        16: 9,
                         overflow: "hidden",
                       }}
-                      image='https://source.unsplash.com/random?recipe'
+                      image='https:source.unsplash.com/random?food'
                       alt='random'
                     />
+
                     <CardContent sx={{ flexGrow: 1 }}>
                       <Box
                         sx={{
@@ -162,7 +160,6 @@ export default function Album() {
                         }}
                       >
                         <Typography
-                          gutterBottom
                           variant='subtitle1'
                           component='h2'
                           color='black'
@@ -194,15 +191,14 @@ export default function Album() {
                             fontWeight: "bold",
                             borderRadius: "6px",
                             border: "1px solid",
-
                             "&:hover": {
                               backgroundColor: "primary.main",
                               color: "white",
                             },
                           }}
-                          // onClick={() => navigate(`detail/${recipe._id}`)}
+                          onClick={() => navigate(`detail/${recipe._id}`)}
                         >
-                          View
+                          view
                         </Button>
                       </NavLink>
                     </CardActions>
@@ -212,40 +208,40 @@ export default function Album() {
             })}
           </Grid>
         </Container>
-        {login ? (
-          <Typography
-            component='h1'
-            variant='subtitle1'
-            align='center'
-            display={{ xs: "block", sm: "block" }}
-            gutterBottom
-          >
-            Welcome{" "}
-            {/* <-----------------  Here is the user map  -----------------> */}
-            {userName.map((user: any) => {
-              {
-                user.email;
-              }
-            })}
-          </Typography>
-        ) : (
-          <Typography
-            variant='subtitle1'
-            align='center'
-            // color='text.secondary'
 
-            sx={{ mt: 4 }}
-          >
-            If you want to share your own recipe with us, please{" "}
-            <NavLink to='/signup'>
-              <Link fontWeight={"bold"} variant='body1'>
-                Sign Up.
-              </Link>
-            </NavLink>
-          </Typography>
-        )}
-      </main>
-      <Footer />
-    </ThemeProvider>
+        <RecipePagination />
+
+        <Typography variant='subtitle1' align='center' sx={{ mt: 12 }}>
+          If you want to share your own recipe with us, please{" "}
+          <NavLink to='/signup'>
+            <Link fontWeight={"bold"} variant='body1'>
+              Sign Up.
+            </Link>
+          </NavLink>
+        </Typography>
+        <Footer />
+      </ThemeProvider>
+    </>
   );
 }
+
+//   {login ? (
+//     <Typography
+//       component='h1'
+//       variant='subtitle1'
+//       align='center'
+//       display={{ xs: "block", sm: "block" }}
+//       gutterBottom
+//     >
+//       Welcome
+//     </Typography>
+//   ) : (
+//     <Typography variant='subtitle1' align='center' sx={{ mt: 4 }}>
+//       If you want to share your own recipe with us, please{" "}
+//       <NavLink to='/signup'>
+//         <Link fontWeight={"bold"} variant='body1'>
+//           Sign Up.
+//         </Link>
+//       </NavLink>
+//     </Typography>
+//   )}

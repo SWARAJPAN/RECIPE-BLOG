@@ -118,6 +118,7 @@ export default function SignIn() {
 
           if (res.status == 201) {
             localStorage.setItem("token", JSON.stringify(res.data.token));
+            localStorage.setItem("user", JSON.stringify(res.data.userId));
             navigate("/");
             window.location.reload();
           }

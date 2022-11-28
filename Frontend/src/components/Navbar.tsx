@@ -98,6 +98,10 @@ export default function ResponsiveAppBar() {
           height: 120,
           justifyContent: "center",
           padding: "0.5rem",
+          "@media (max-width:420px)": {
+            borderRadius: 1,
+            height: 80,
+          },
         }}
       >
         <Container maxWidth='xl'>

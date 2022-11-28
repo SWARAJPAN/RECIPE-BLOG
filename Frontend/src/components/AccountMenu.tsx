@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -26,16 +26,19 @@ const logout = () => {
   window.location.reload();
 };
 
+const userId: string = JSON.parse(localStorage.getItem("user") || "{}");
+console.log(userId);
+
 const settings = [
   {
     id: 1,
     title: "Publishes",
-    path: "/userpublishes",
+    path: `/user/publishes/${userId}`,
   },
   {
     id: 2,
     title: "Bookmarks",
-    path: "/userbookmarks",
+    path: `/user/bookmarks/${userId}`,
   },
 
   {

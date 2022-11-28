@@ -87,6 +87,7 @@ export default function PublicMenu() {
       >
         {pages.map((page) => (
           <NavLink
+            key={page.id}
             to={`${page.path}`}
             style={{ textDecoration: "none", color: "black" }}
           >

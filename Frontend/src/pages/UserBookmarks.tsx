@@ -70,18 +70,22 @@ export default function UserBookmarks() {
   const id = params.id;
   console.log(id);
 
+  const navigate = useNavigate();
+
   const [showBbookmarks, setShowBookmarks] = useState<any>([]);
 
   useEffect(() => {
-    API.get(`/users/${id}/bookmarked`)
+    API.get(`users/${id}`)
       .then((res) => {
-        console.log(res.data);
-        setShowBookmarks(res.data);
+        console.log(res.data.user);
+        setShowBookmarks(res.data.user.bookmarkedRecipe);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+
+  console.log(showBbookmarks.bookmarkedRecipe, "rec");
 
   return (
     //show all the bookmarks of the user
@@ -97,47 +101,74 @@ export default function UserBookmarks() {
           <Divider />
 
           <Grid container spacing={4} mt={4}>
-            {/* {showBbookmarks.map((bookmark: any) => { */}
-            <Grid item xs={12} sm={6} md={4}>
-              <Card
-                sx={{
-                  maxHeight: "75%",
-                  display: "flex",
-                  flexDirection: "column",
-                  boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
-                  borderRadius: "10px",
+            {showBbookmarks.map((bookmark: any) => {
+              return (
+                <Grid item key={bookmark._id} xs={12} sm={6} md={4}>
+                  <Card
+                    sx={{
+                      maxHeight: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                      borderRadius: "10px",
 
-                  transition: "all 0.2s ease-in-out",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                    opacity: 0.9,
-                  },
-                }}
-              >
-                <CardMedia
-                  component='img'
-                  image='https://source.unsplash.com/random?food'
-                  alt='random'
-                  sx={{
-                    overflow: "hidden",
-                  }}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant='h5' component='h2'>
-                    Heading
-                  </Typography>
-                  <Typography>
-                    This is a media card. You can use this section to describe
-                    the content.
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size='small'>View</Button>
-                  <Button size='small'>Remove Bookmark</Button>
-                </CardActions>
-              </Card>
-            </Grid>
-            {/* })} */}
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                        opacity: 0.9,
+                      },
+                    }}
+                  >
+                    <CardMedia
+                      component='img'
+                      image='https://source.unsplash.com/random?food'
+                      alt='random'
+                      sx={{
+                        overflow: "hidden",
+                      }}
+                    />
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography gutterBottom variant='h6' component='h2'>
+                          {bookmark.name}
+                        </Typography>
+                        <Typography variant='subtitle1'>
+                          {bookmark.ethnicity}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        variant='outlined'
+                        size='medium'
+                        sx={{
+                          justifyContent: "center",
+
+                          margin: "auto",
+                          minWidth: "100%",
+                          fontWeight: "bold",
+                          borderRadius: "6px",
+                          border: "1px solid",
+                          "&:hover": {
+                            backgroundColor: "primary.main",
+                            color: "white",
+                          },
+                        }}
+                        onClick={() => navigate(`/detail/${bookmark._id}`)}
+                      >
+                        view
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              );
+            })}
           </Grid>
         </Container>
       </Box>

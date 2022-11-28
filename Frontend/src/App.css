@@ -3,11 +3,8 @@
   padding: 2rem 8%;
 }
 
-.navbar {
-  background-color: #f06414;
-  color: rgb(235, 225, 225);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-top: 2rem;
-  padding: 1rem;
+@media screen and (max-width: 480px) {
+  #root {
+    padding: 1rem 6%;
+  }
 }

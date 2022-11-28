@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Card from "@mui/material/Card";
-
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -58,6 +58,7 @@ const theme = createTheme({
     subtitle1: {
       mt: 2,
       marginBottom: "1rem",
+      // fontSize: "1rem",
       color: "#7F8284",
       "@media (max-width:420px)": {
         lineHeight: "1.5rem",
@@ -65,7 +66,7 @@ const theme = createTheme({
     },
     body1: {
       color: "#676A6B",
-      fontSize: "0.9 rem",
+      fontSize: "2 rem",
       fontWeight: "bold",
       //   fontSize: "0.9rem",
     },
@@ -113,10 +114,19 @@ export default function DetailPage() {
   const [detailRecipe, setDetailRecipe] = useState<any>([]);
 
   useEffect(() => {
+    const user: string = JSON.parse(localStorage.getItem("user") || "{}");
+
     API.get(`recipes/${id}`)
       .then((res) => {
         console.log(res.data.recipe);
         setDetailRecipe(res.data.recipe);
+
+        res.data.recipe.bookmarkedBy.forEach((bookmark: any) => {
+          if (bookmark === user) {
+            setBookmarked(true);
+            console.log("bookmark", bookmarked);
+          }
+        });
       })
 
       .catch((err) => {
@@ -241,7 +251,6 @@ export default function DetailPage() {
               <Typography variant='subtitle1'>
                 {detailRecipe.instruction}
               </Typography>
-              {/* <Divider /> */}
             </Grid>
           </Grid>
 

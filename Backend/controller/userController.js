@@ -49,7 +49,7 @@ const logIn = async (req, res, next) => {
             });
           }
           const token = jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
-            expiresIn: "24h",
+            expiresIn: "1000h",
           });
           console.log(token);
           console.log("user not found"),
@@ -75,7 +75,10 @@ const logIn = async (req, res, next) => {
 //get user
 const getUser = async (req, res) => {
   try {
-    const user = await Users.find({});
+    const user = await Users.find({}).populate(
+      "bookmarkedRecipe",
+      "name category"
+    );
     //.populate("publishedRecipe", "name"); --> to show recipe and its name as an object
     res.status(200).json({ message: "success", user, length: user.length });
   } catch (error) {
@@ -87,7 +90,9 @@ const getUser = async (req, res) => {
 const getOneUser = async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await Users.findById(userId);
+    const user = await Users.findById(userId)
+      .populate("bookmarkedRecipe", "name category createdAt ethnicity")
+      .populate("publishedRecipe", "name category createdAt ethnicity");
 
     if (!user) {
       return res.status(404).json({ message: `${userId} does not exist` });
@@ -152,25 +157,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-//get bookmarked recipe
-const getBookmarkedRecipe = async (req, res) => {
-  const userId = req.params.id;
-  try {
-    const user = await Users.findById(userId).populate(
-      "bookmarkedRecipe",
-      "name"
-    );
-
-    if (!user) {
-      return res.status(404).json({ message: `${userId} does not exist` });
-    }
-
-    res.status(200).json({ message: "found", user });
-  } catch (error) {
-    res.status(500).json({ message: error });
-  }
-};
-
 module.exports = {
   signUp,
   logIn,
@@ -178,5 +164,4 @@ module.exports = {
   getOneUser,
   updateUser,
   deleteUser,
-  getBookmarkedRecipe,
 };

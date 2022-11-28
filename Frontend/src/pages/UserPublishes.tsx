@@ -22,6 +22,7 @@ import Divider from "@mui/material/Divider";
 import { useState, useEffect } from "react";
 import { API } from "../lib/axios";
 import { useParams } from "react-router-dom";
+import DeleteModal from "../components/DeleteModal";
 
 const theme = createTheme({
   palette: {
@@ -66,17 +67,23 @@ const theme = createTheme({
 });
 
 export default function UserPublishes() {
+  const [openModal, setOpenModal] = React.useState(false);
+
+  //send the id of the recipe to the modal
+  const [recipeId, setRecipeId] = React.useState("");
+
   const params = useParams();
   const id = params.id;
-  console.log(id);
+  // console.log(id);
+  console.log(recipeId);
 
   const [showPublishes, setShowPublishes] = useState<any>([]);
 
   useEffect(() => {
-    API.get(`/users/${id}/publishes`)
+    API.get(`/users/${id}`)
       .then((res) => {
-        console.log(res.data);
-        setShowPublishes(res.data);
+        console.log(res.data.user);
+        setShowPublishes(res.data.user.publishedRecipe);
       })
       .catch((err) => {
         console.log(err);
@@ -97,47 +104,80 @@ export default function UserPublishes() {
           <Divider />
 
           <Grid container spacing={4} mt={4}>
-            {/* {showBPublishes.map((bookmark: any) => { */}
-            <Grid item xs={12} sm={6} md={4}>
-              <Card
-                sx={{
-                  maxHeight: "75%",
-                  display: "flex",
-                  flexDirection: "column",
-                  boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
-                  borderRadius: "10px",
+            {showPublishes.map((publishes: any) => {
+              return (
+                <Grid item key={publishes._id} xs={12} sm={6} md={4}>
+                  <Card
+                    sx={{
+                      maxHeight: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                      borderRadius: "10px",
 
-                  transition: "all 0.2s ease-in-out",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                    opacity: 0.9,
-                  },
-                }}
-              >
-                <CardMedia
-                  component='img'
-                  image='https://source.unsplash.com/random?food'
-                  alt='random'
-                  sx={{
-                    overflow: "hidden",
-                  }}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant='h5' component='h2'>
-                    Heading
-                  </Typography>
-                  <Typography>
-                    This is a media card. You can use this section to describe
-                    the content.
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size='small'>Edit</Button>
-                  <Button size='small'>Delete</Button>
-                </CardActions>
-              </Card>
-            </Grid>
-            {/* })} */}
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                        opacity: 0.9,
+                      },
+                    }}
+                  >
+                    <NavLink
+                      to={`/detail/${publishes._id}`}
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                      }}
+                    >
+                      <CardMedia
+                        component='img'
+                        image='https://source.unsplash.com/random?food'
+                        // image={publishes.uploadImg}
+                        alt='random'
+                        sx={{
+                          overflow: "hidden",
+                        }}
+                      />
+                      <CardContent sx={{ flexGrow: 1 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography gutterBottom variant='h6' component='h2'>
+                            {publishes.name}
+                          </Typography>
+                          <Typography variant='subtitle1'>
+                            {publishes.ethnicity}
+                          </Typography>
+                        </Box>
+                      </CardContent>
+                    </NavLink>
+                    <CardActions>
+                      <Button size='small'>Edit</Button>
+                      <Button
+                        onClick={() => {
+                          setOpenModal(true);
+
+                          setRecipeId(publishes._id);
+                        }}
+                        size='small'
+                      >
+                        Delete
+                      </Button>
+
+                      <DeleteModal
+                        open={openModal}
+                        recipeId={recipeId}
+                        onClose={() => setOpenModal(false)}
+                      />
+                    </CardActions>
+                  </Card>
+                </Grid>
+              );
+            })}
           </Grid>
         </Container>
       </Box>

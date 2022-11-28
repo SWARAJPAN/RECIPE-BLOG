@@ -36,6 +36,13 @@ const RecipeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
+
+    uploadImg: [
+      {
+        type: String,
+      },
+    ],
+
     bookmarkedBy: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -149,6 +149,7 @@ interface Values {
   ethnicity: string;
   instruction: string;
   category: string;
+  uploadImg: string;
 }
 
 const getTokenFromLocalStorage = () => {
@@ -159,6 +160,9 @@ const getTokenFromLocalStorage = () => {
     return null;
   }
 };
+
+const userId: string = JSON.parse(localStorage.getItem("user") || "{}");
+console.log(userId);
 
 export default function Publish() {
   const [login, setLogin] = React.useState(getTokenFromLocalStorage);
@@ -173,6 +177,7 @@ export default function Publish() {
       ethnicity: "",
       instruction: "",
       category: "",
+      uploadImg: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values: Values) => {
@@ -191,7 +196,7 @@ export default function Publish() {
           // alert("Recipe published successfully");
 
           if (res.status === 201) {
-            navigate("/userpublishes");
+            navigate(`/user/publishes/${userId}`);
             window.location.reload();
             console.log(res.data, "published");
           }
@@ -211,6 +216,26 @@ export default function Publish() {
   //   });
   // };
 
+  //convert image to base64
+  const getBase64 = (file: any, cb: any) => {
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      cb(reader.result);
+    };
+    reader.onerror = function (error) {
+      console.log("Error: ", error);
+    };
+  };
+
+  //upload image
+  const uploadImage = (e: any) => {
+    let file = e.target.files[0];
+    getBase64(file, (result: any) => {
+      console.log(result);
+    });
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component='main' maxWidth='sm'>
@@ -218,7 +243,7 @@ export default function Publish() {
         <Box
           sx={{
             marginTop: 6,
-            // width: "100%",
+
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -246,9 +271,8 @@ export default function Publish() {
             variant='h2'
             sx={{
               display: "flex",
-              //   margin: "auto",
+
               width: "80vw",
-              //   mr: 1,
             }}
           >
             Submit your recipe!
@@ -426,7 +450,11 @@ export default function Publish() {
                       accept='image/png, image/jpeg, image/jpg, image/gif,'
                       multiple
                       type='file'
-                      style={{ display: "none" }}
+                      value={formik.values.uploadImg}
+                      onChange={uploadImage}
+                      style={{
+                        display: "none",
+                      }}
                     />
                   </Button>
                 </Grid>

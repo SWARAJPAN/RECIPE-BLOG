@@ -27,10 +27,10 @@ export default function App() {
           <Navbar />
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/userbookmarks' element={<UserBookmarks />} />
+            <Route path='/user/bookmarks/:id' element={<UserBookmarks />} />
             <Route path='/detail/:id' element={<DetailPage />} />
             <Route path='/publish' element={<Publish />} />
-            <Route path='/userpublishes' element={<UserPublishes />} />
+            <Route path='/user/publishes/:id' element={<UserPublishes />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/signin' element={<SignIn />} />
           </Routes>
