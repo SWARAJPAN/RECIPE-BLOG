@@ -47,7 +47,7 @@ export default function ModalDialog(props: any) {
           <Typography
             id='modal-modal-title'
             variant='body1'
-            component='h2'
+            component='h4'
             sx={{ fontWeight: "bold" }}
           >
             Uh-oh, Looks like you need to login first!
@@ -60,7 +60,7 @@ export default function ModalDialog(props: any) {
             <span>
               {" "}
               <NavLink
-                to='/signup'
+                to='/signin'
                 style={{
                   textDecoration: "none",
                   color: "#FF5757",

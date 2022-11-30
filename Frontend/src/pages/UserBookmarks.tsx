@@ -40,7 +40,7 @@ const theme = createTheme({
   },
 
   typography: {
-    h3: {
+    h2: {
       // fontSize: 12,
 
       color: "#676A6B",
@@ -50,7 +50,7 @@ const theme = createTheme({
       // width: "50vw",
       justifyContent: "center",
       "@media (max-width:420px)": {
-        fontSize: "1.4rem",
+        fontSize: "2.4rem",
       },
     },
     subtitle1: {
@@ -95,7 +95,7 @@ export default function UserBookmarks() {
 
       <Box sx={{ flexGrow: 1, pt: 8, pb: 4 }}>
         <Container maxWidth='lg'>
-          <Typography variant='h3' component='h2' gutterBottom>
+          <Typography variant='h2' component='h2' gutterBottom>
             Your Bookmarks
           </Typography>
           <Divider />
@@ -121,7 +121,7 @@ export default function UserBookmarks() {
                   >
                     <CardMedia
                       component='img'
-                      image='https://source.unsplash.com/random?food'
+                      image={bookmark.uploadImg}
                       alt='random'
                       sx={{
                         overflow: "hidden",

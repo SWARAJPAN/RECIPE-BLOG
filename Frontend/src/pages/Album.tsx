@@ -22,9 +22,11 @@ import Divider from "@mui/material/Divider";
 import { useState, useEffect } from "react";
 import { API } from "../lib/axios";
 import { useParams } from "react-router-dom";
-import { Pagination } from "@mui/material";
+import { Chip, InputAdornment, Pagination, TextField } from "@mui/material";
 import RecipePagination from "../components/RecipePagination";
 import SearchBar from "../components/SearchBar";
+import SearchIcon from "@mui/icons-material/Search";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
 
 const theme = createTheme({
   palette: {
@@ -81,19 +83,31 @@ export default function Album() {
   const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState<any>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [login, setLogin] = useState(getTokenFromLocalStorage());
+  const [search, setSearch] = useState("");
+  const [sendSearch, setSendSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
-  // const [userName, setUserName] = useState<any>([]);
+  const { id } = useParams();
+
+  //search a recipe
+
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    setSearch(e.target.value);
+    setSendSearch(e.target.value);
+  };
 
   useEffect(() => {
-    API.get("recipes?sort={'createdAt':-1}&limit=9").then((res) => {
-      setRecipes(res.data.recipe);
-      console.log(res.data.recipe);
-    });
-  }, []);
-
-  // console.log(recipes);
+    API.get(`recipes?search=${search}&sort={'createdAt':-1}&limit=9`).then(
+      (res) => {
+        setRecipes(res.data.recipe);
+        console.log(res.data.recipe);
+      }
+    );
+  }, [search]);
 
   return (
     <>
@@ -112,136 +126,201 @@ export default function Album() {
               component='h1'
               variant='h2'
               display={{ xs: "none", sm: "block" }}
-              gutterBottom
             >
               Find your next recipe!
             </Typography>
           </Container>
         </Box>
+        {/* <-----------------Search Bar-----------------> */}
 
-        <SearchBar />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mb: 2,
+            mt: 1,
+
+            "@media (max-width:420px)": {
+              mb: 2,
+              mt: 1,
+            },
+          }}
+        >
+          <TextField
+            id='input-with-icon-textfield'
+            placeholder='Search by name, ethnicity or category...'
+            color='secondary'
+            onChange={handleSearch}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            variant='standard'
+            sx={{
+              position: "relative",
+
+              justifyContent: "center",
+              alignContent: "center",
+              margin: "auto",
+              width: "50%",
+              "@media (max-width:420px)": {
+                width: "90%",
+              },
+            }}
+          />
+        </Box>
 
         <Container sx={{ py: 8, mb: 2 }} maxWidth='lg'>
-          <Grid container spacing={5}>
-            {recipes.map((recipe: any) => {
-              return (
-                <Grid item key={recipes._id} xs={12} sm={6} md={4}>
-                  <Card
-                    sx={{
-                      maxHeight: "75%",
-                      display: "flex",
-                      flexDirection: "column",
-                      boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
-                      borderRadius: "10px",
-                      transition: "all 0.2s ease-in-out",
-                      "&:hover": {
-                        transform: "scale(1.05)",
-                        opacity: 0.9,
-                        scale: "1.1",
-                      },
-                    }}
-                  >
-                    <CardMedia
-                      component='img'
+          <Grid container spacing={6}>
+            {recipes
+              // .slice((page - 1) * 9, page * 9)
+
+              .map((recipe: any, index: number) => {
+                return (
+                  <Grid item key={recipes._id} xs={12} sm={6} md={4}>
+                    <Card
                       sx={{
-                        16: 9,
-                        overflow: "hidden",
+                        maxHeight: "85%",
+                        display: "flex",
+                        flexDirection: "column",
+                        boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                        borderRadius: "10px",
+                        transition: "all 0.2s ease-in-out",
+                        "&:hover": {
+                          transform: "scale(1.1)",
+                        },
+                        "@media (max-width:420px)": {
+                          maxHeight: "100%",
+                        },
+                        position: "relative",
                       }}
-                      image='https:source.unsplash.com/random?food'
-                      alt='random'
-                    />
-
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Box
+                    >
+                      <CardMedia
+                        component='img'
                         sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
+                          16: 9,
+                          overflow: "hidden",
+                          "@media (max-width:420px)": {
+                            height: "50%",
+                          },
                         }}
-                      >
-                        <Typography
-                          variant='subtitle1'
-                          component='h2'
-                          color='black'
-                        >
-                          {recipe.name}
-                        </Typography>
-                        <Typography
-                          gutterBottom
-                          variant='subtitle1'
-                          component='h2'
-                        >
-                          {recipe.ethnicity}
-                        </Typography>
-                      </Box>
-                    </CardContent>
-                    <CardActions>
-                      <NavLink
-                        to={`/detail/${recipe._id}`}
-                        style={{ textDecoration: "none", minWidth: "100%" }}
-                      >
-                        <Button
-                          variant='outlined'
-                          size='medium'
-                          sx={{
-                            justifyContent: "center",
+                        image={recipe.uploadImg}
+                        alt='random'
+                      />
 
-                            margin: "auto",
-                            minWidth: "100%",
-                            fontWeight: "bold",
-                            borderRadius: "6px",
-                            border: "1px solid",
-                            "&:hover": {
-                              backgroundColor: "primary.main",
-                              color: "white",
-                            },
+                      <Chip
+                        icon={<LocalDiningIcon />}
+                        label={recipe.category}
+                        sx={{
+                          position: "absolute",
+                          top: "0",
+                          right: "0",
+                          margin: "0.6rem",
+                          color: "secondary",
+                          backgroundColor: "white",
+                          "&:hover": {
+                            backgroundColor: "rgba(0,0,0,0.5)",
+                          },
+                        }}
+                      />
+
+                      <CardContent sx={{ flexGrow: 1 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "baseline",
                           }}
-                          onClick={() => navigate(`detail/${recipe._id}`)}
                         >
-                          view
-                        </Button>
-                      </NavLink>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              );
-            })}
+                          <Typography
+                            variant='subtitle1'
+                            component='h2'
+                            color='black'
+                          >
+                            {recipe.name}
+                          </Typography>
+                          <Typography
+                            gutterBottom
+                            variant='subtitle1'
+                            component='h2'
+                          >
+                            {recipe.ethnicity}
+                          </Typography>
+                        </Box>
+                      </CardContent>
+                      <CardActions>
+                        <NavLink
+                          to={`/detail/${recipe._id}`}
+                          style={{ textDecoration: "none", minWidth: "100%" }}
+                        >
+                          <Button
+                            variant='outlined'
+                            size='medium'
+                            sx={{
+                              justifyContent: "center",
+
+                              margin: "auto",
+                              minWidth: "100%",
+                              fontWeight: "bold",
+                              borderRadius: "6px",
+                              border: "1px solid",
+                              "&:hover": {
+                                backgroundColor: "primary.main",
+                                color: "white",
+                              },
+                            }}
+                            onClick={() => navigate(`detail/${recipe._id}`)}
+                          >
+                            view
+                          </Button>
+                        </NavLink>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                );
+              })}
           </Grid>
         </Container>
 
         <RecipePagination />
-
-        <Typography variant='subtitle1' align='center' sx={{ mt: 12 }}>
-          If you want to share your own recipe with us, please{" "}
-          <NavLink to='/signup'>
-            <Link fontWeight={"bold"} variant='body1'>
-              Sign Up.
-            </Link>
-          </NavLink>
-        </Typography>
+        {login ? (
+          <Typography
+            color={theme.palette.secondary.main}
+            variant='subtitle1'
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "auto",
+              width: "50%",
+              mt: 4,
+            }}
+          >
+            Welcome {login.user}!
+          </Typography>
+        ) : (
+          <Typography variant='subtitle1' align='center' sx={{ mt: 12 }}>
+            If you want to share your own recipe with us, please{" "}
+            <NavLink to='/signup'>
+              <Link fontWeight={"bold"} variant='body1'>
+                Sign Up.
+              </Link>
+            </NavLink>
+          </Typography>
+        )}
         <Footer />
       </ThemeProvider>
     </>
   );
 }
-
-//   {login ? (
-//     <Typography
-//       component='h1'
-//       variant='subtitle1'
-//       align='center'
-//       display={{ xs: "block", sm: "block" }}
-//       gutterBottom
-//     >
-//       Welcome
-//     </Typography>
-//   ) : (
-//     <Typography variant='subtitle1' align='center' sx={{ mt: 4 }}>
-//       If you want to share your own recipe with us, please{" "}
-//       <NavLink to='/signup'>
-//         <Link fontWeight={"bold"} variant='body1'>
-//           Sign Up.
-//         </Link>
-//       </NavLink>
-//     </Typography>
-//   )}
+function useDebounce(
+  search: string,
+  arg1: number,
+  handleSendSearch: (e: any) => void
+) {
+  throw new Error("Function not implemented.");
+}

@@ -3,13 +3,20 @@ const Users = require("../models/userModel");
 
 //get all Recipes
 const getAllRecipe = async (req, res) => {
+  console.log(req.query);
+  const { limit, skip, search } = req.query;
   try {
-    const recipe = await Recipes.find(eval("(" + req.query.where + ")"))
-      .select(eval("(" + req.query.select + ")"))
+    const recipe = await Recipes.find({
+      $or: [
+        { name: { $regex: `${search}`, $options: "i" } },
+        { ethnicity: { $regex: `${search}`, $options: "i" } },
+        { category: { $regex: `${search}`, $options: "i" } },
+      ],
+    })
       .populate("publishedBy", "firstName lastName")
-      .sort(eval("(" + req.query.sort + " )"))
-      .skip(eval("(" + req.query.skip + " )"))
-      .limit(eval("(" + req.query.limit + " )"));
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
     res.status(200).json({ message: "success", recipe, length: recipe.length });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -19,7 +26,7 @@ const getAllRecipe = async (req, res) => {
 //create a new Recipe
 const createRecipe = async (req, res) => {
   console.log("create recipe hit");
-  console.log(req.user);
+  console.log(req.body);
   try {
     const recipe = await Recipes.create(req.body);
     console.log(recipe);
@@ -35,10 +42,11 @@ const createRecipe = async (req, res) => {
       { new: true }
     );
 
-    // const data = await recipe.save();
     res.status(201).json({ recipe });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: error.message, ok: "server error do something" });
   }
 };
 
@@ -50,7 +58,7 @@ const getRecipe = async (req, res) => {
   try {
     const recipe = await Recipes.findById(recipeID)
       .select(eval("(" + req.query.select + ")"))
-      .populate("publishedBy", "firstName lastName");
+      .populate("publishedBy", "firstName lastName ");
 
     console.log(recipe);
 
@@ -128,9 +136,7 @@ const updateRecipe = async (req, res) => {
     const recipe = await Recipes.findByIdAndUpdate(
       recipeID,
       req.body,
-      // description: req.body.description, --> updation of any tags (i.e, name, desp, ingridnts) needs this syntax
-      // $push: { ingredients: updatedIngredients },
-      // { $pull: { ingredients: updatedIngredients } }, -- to delete duplicates
+
       {
         new: true,
         runValidators: true,

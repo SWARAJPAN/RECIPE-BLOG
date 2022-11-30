@@ -14,7 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import RamenDiningIcon from "@mui/icons-material/RamenDining";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link, NavLink } from "react-router-dom";
+import { Link, Navigate, NavLink } from "react-router-dom";
 // import { NavLink } from "react-router-dom";
 import { red, blue } from "@mui/material/colors";
 import { useState } from "react";
@@ -23,6 +23,7 @@ import { Login } from "@mui/icons-material";
 const logout = () => {
   console.log("logout");
   localStorage.removeItem("token");
+
   window.location.reload();
 };
 

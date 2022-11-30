@@ -41,17 +41,18 @@ const theme = createTheme({
   },
 
   typography: {
-    h3: {
+    h2: {
       // fontSize: 12,
 
       color: "#676A6B",
-      fontWeight: "bold",
+      fontWeight: 600,
       textAlign: "center",
       // display: "flex",
       // width: "50vw",
+      mb: 2,
       justifyContent: "center",
       "@media (max-width:420px)": {
-        fontSize: "1.4rem",
+        fontSize: "2.4rem",
       },
     },
     subtitle1: {
@@ -98,7 +99,7 @@ export default function UserPublishes() {
 
       <Box sx={{ flexGrow: 1, pt: 8, pb: 4 }}>
         <Container maxWidth='lg'>
-          <Typography variant='h3' component='h2' gutterBottom>
+          <Typography variant='h2' component='h2' gutterBottom>
             Your Publishes
           </Typography>
           <Divider />
@@ -131,8 +132,7 @@ export default function UserPublishes() {
                     >
                       <CardMedia
                         component='img'
-                        image='https://source.unsplash.com/random?food'
-                        // image={publishes.uploadImg}
+                        image={publishes.uploadImg}
                         alt='random'
                         sx={{
                           overflow: "hidden",
@@ -156,7 +156,19 @@ export default function UserPublishes() {
                       </CardContent>
                     </NavLink>
                     <CardActions>
-                      <Button size='small'>Edit</Button>
+                      <NavLink
+                        state={publishes}
+                        to={`/edit/${publishes._id}`}
+                        style={{
+                          textDecoration: "none",
+                          color: "black",
+                        }}
+                      >
+                        <Button size='small' color='primary'>
+                          Edit
+                        </Button>
+                      </NavLink>
+
                       <Button
                         onClick={() => {
                           setOpenModal(true);
@@ -167,7 +179,6 @@ export default function UserPublishes() {
                       >
                         Delete
                       </Button>
-
                       <DeleteModal
                         open={openModal}
                         recipeId={recipeId}

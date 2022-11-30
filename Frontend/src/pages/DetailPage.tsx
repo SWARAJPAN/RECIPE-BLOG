@@ -259,7 +259,7 @@ export default function DetailPage() {
               <Card>
                 <CardMedia
                   component='img'
-                  image='https://source.unsplash.com/random?food'
+                  image={detailRecipe.uploadImg}
                   alt='pasta'
                   height='500'
                   //   sx={{ boxShadow: "0" }}

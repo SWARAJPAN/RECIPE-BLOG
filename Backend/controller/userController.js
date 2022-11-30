@@ -91,8 +91,14 @@ const getOneUser = async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await Users.findById(userId)
-      .populate("bookmarkedRecipe", "name category createdAt ethnicity")
-      .populate("publishedRecipe", "name category createdAt ethnicity");
+      .populate(
+        "bookmarkedRecipe",
+        "name category createdAt ethnicity uploadImg "
+      )
+      .populate(
+        "publishedRecipe",
+        "name category createdAt ethnicity uploadImg"
+      );
 
     if (!user) {
       return res.status(404).json({ message: `${userId} does not exist` });

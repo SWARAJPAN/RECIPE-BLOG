@@ -9,44 +9,30 @@ import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import { InputAdornment, TextField } from "@mui/material";
-// import { Search } from "@mui/icons-material";
-import { borderRadius } from "@mui/system";
-import { AccountCircle } from "@mui/icons-material";
+import { API } from "../lib/axios";
 
-// const Search = styled("div")(() => ({
-//   position: "relative",
+export default function SearchBar(props: any) {
+  //get props from Album.tsx and pass it to SearchBar.tsx
 
-//   justifyContent: "center",
-//   alignContent: "center",
-//   margin: "auto",
-//   width: "50%",
-//   "@media (max-width:420px)": {
-//     width: "100%",
-//   },
-// }));
-
-// const SearchIconWrapper = styled("div")(({ theme }) => ({
-//   padding: theme.spacing(0, 2),
-//   height: "100%",
-//   position: "absolute",
-//   pointerEvents: "none",
-//   display: "flex",
-//   alignItems: "center",
-//   justifyContent: "center",
-// }));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-}));
-
-export default function SearchBar() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Toolbar>
+    <Box
+      sx={{
+        flexGrow: 1,
+      }}
+    >
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <TextField
           id='input-with-icon-textfield'
           placeholder='Search...'
           color='secondary'
+          onChange={(e) => props.setSearch(e.target.value)}
+          // onChange={props.onChange}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
@@ -61,7 +47,7 @@ export default function SearchBar() {
             justifyContent: "center",
             alignContent: "center",
             margin: "auto",
-            width: "50%",
+            width: "60%",
             "@media (max-width:420px)": {
               width: "90%",
             },

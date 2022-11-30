@@ -16,19 +16,19 @@ import Album from "./pages/Album";
 import { RecoilRoot } from "recoil";
 import UserPublishes from "./pages/UserPublishes";
 import UserBookmarks from "./pages/UserBookmarks";
+import EditRecipe from "./components/EditRecipe";
 
 export default function App() {
   return (
     <>
-      {/* <Home /> */}
       <RecoilRoot>
-        {/* RecoilRoot is a wrapper for the entire app */}
         <BrowserRouter>
           <Navbar />
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/user/bookmarks/:id' element={<UserBookmarks />} />
             <Route path='/detail/:id' element={<DetailPage />} />
+            <Route path='/edit/:id' element={<EditRecipe />} />
             <Route path='/publish' element={<Publish />} />
             <Route path='/user/publishes/:id' element={<UserPublishes />} />
             <Route path='/signup' element={<SignUp />} />

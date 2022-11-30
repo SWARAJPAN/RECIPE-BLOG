@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
 import { red, blue } from "@mui/material/colors";
 
@@ -80,10 +80,6 @@ const theme = createTheme({
       fontFamily: "arial",
 
       borderRadius: "20px",
-      // backgroundColor: "#676A6B",
-      // "&:focus": {
-      //   backgroundColor: "#676A6B",
-      // },
     },
   },
 });
@@ -119,7 +115,6 @@ const validationSchema = yup.object({
     .string()
     .required("Description is required")
     .min(20, "Must be at least 20 characters")
-    .max(100, "Must be less  than 100 characters")
     .trim("Cannot contain spaces"),
   ethnicity: yup
     .string()
@@ -166,8 +161,23 @@ console.log(userId);
 
 export default function Publish() {
   const [login, setLogin] = React.useState(getTokenFromLocalStorage);
+  const [image, setImage] = React.useState(null);
+  const [showRecipeId, setShowRecipeId] = React.useState<any>();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  console.log(location.state, "id");
+
+  const params = useParams();
+  console.log(params.id);
+
+  React.useEffect(() => {
+    API.get(`/recipes`).then((res) => {
+      setShowRecipeId(res.data.recipe);
+    });
+  }, []);
+  console.log(showRecipeId, "show recipe ID");
 
   const formik = useFormik({
     initialValues: {
@@ -182,18 +192,14 @@ export default function Publish() {
     validationSchema: validationSchema,
     onSubmit: (values: Values) => {
       PublishRecipe(values);
-      // alert(JSON.stringify(values, null, 2));
     },
   });
 
   const PublishRecipe = (data: any) => {
     {
-      // console.log(data, "data");
       try {
-        API.post("recipes", data).then((res) => {
+        API.post("recipes", { ...data, uploadImg: image }).then((res) => {
           console.log(res);
-          // console.log(res.data, "show someting");
-          // alert("Recipe published successfully");
 
           if (res.status === 201) {
             navigate(`/user/publishes/${userId}`);
@@ -206,15 +212,6 @@ export default function Publish() {
       }
     }
   };
-
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   console.log({
-  //     email: data.get("email"),
-  //     password: data.get("password"),
-  //   });
-  // };
 
   //convert image to base64
   const getBase64 = (file: any, cb: any) => {
@@ -232,7 +229,7 @@ export default function Publish() {
   const uploadImage = (e: any) => {
     let file = e.target.files[0];
     getBase64(file, (result: any) => {
-      console.log(result);
+      setImage(result);
     });
   };
 
@@ -280,12 +277,7 @@ export default function Publish() {
           <Typography component='h1' variant='subtitle1'>
             Share your amazing recipes with hundreds of home cooks!
           </Typography>
-          <Box
-            // component='form'
-            // noValidate
-            // onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
+          <Box sx={{ mt: 3 }}>
             <form onSubmit={formik.handleSubmit}>
               <Grid container spacing={2} rowGap={1}>
                 <Grid item xs={12}>
@@ -442,7 +434,6 @@ export default function Publish() {
                         color: "white",
                       },
                     }}
-                    placeholder='Upload Image'
                   >
                     <PhotoCamera /> <Typography>Upload Image</Typography>
                     <input
@@ -460,43 +451,46 @@ export default function Publish() {
                 </Grid>
               </Grid>
               {login ? (
-                <Button
-                  type='submit'
-                  fullWidth
-                  variant='contained'
-                  sx={{
-                    mt: 3,
-                    mb: 2,
-                    boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
-                  }}
-                >
-                  Publish!
-                </Button>
+                <>
+                  <Button
+                    type='submit'
+                    fullWidth
+                    variant='contained'
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                    }}
+                  >
+                    Publish!
+                  </Button>
+                </>
               ) : (
-                <Button
-                  type='submit'
-                  fullWidth
-                  disabled
-                  variant='contained'
-                  // color='primary'
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  You need to Sign-In to Publish
-                </Button>
+                <>
+                  <Button
+                    type='submit'
+                    fullWidth
+                    disabled
+                    variant='contained'
+                    // color='primary'
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    You need to Sign-In to Publish
+                  </Button>
+                  <Grid container justifyContent='center'>
+                    <Grid item>
+                      <Typography variant='subtitle1' sx={{ mt: 3 }}>
+                        Don't have an account?{" "}
+                        <NavLink to='/signup'>
+                          <Link variant='body1' fontWeight={"bold"}>
+                            Sign-up.
+                          </Link>
+                        </NavLink>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </>
               )}
-
-              <Grid container justifyContent='center'>
-                <Grid item>
-                  <Typography variant='subtitle1' sx={{ mt: 3 }}>
-                    Don't have an account?{" "}
-                    <NavLink to='/signup'>
-                      <Link variant='body1' fontWeight={"bold"}>
-                        Sign-up.
-                      </Link>
-                    </NavLink>
-                  </Typography>
-                </Grid>
-              </Grid>
             </form>
           </Box>
         </Box>
