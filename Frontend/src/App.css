@@ -8,3 +8,19 @@
     padding: 1rem 6%;
   }
 }
+
+.chip {
+  background: rgba(255, 255, 255, 0.137);
+  box-shadow: 0 4px 15px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 10px;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0.6rem;
+  padding: 0.6rem;
+  height: 3rem;
+  font-weight: 500;
+}

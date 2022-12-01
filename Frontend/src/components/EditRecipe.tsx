@@ -16,8 +16,8 @@ import { red, blue } from "@mui/material/colors";
 import Footer from "../components/Footer";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { Player } from "@lottiefiles/react-lottie-player";
-import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import Loader from "../assets/loader.json";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
@@ -103,6 +103,29 @@ const categoryType = [
   },
 ];
 
+const cookingTime = [
+  {
+    value: "15mins",
+    label: "15mins",
+  },
+  {
+    value: "30mins",
+    label: "30mins",
+  },
+  {
+    value: "45mins",
+    label: "45mins",
+  },
+  {
+    value: "1hr+",
+    label: "1hr+",
+  },
+  {
+    value: "2hr+",
+    label: "2hr+",
+  },
+];
+
 type Recipe = {
   name: string;
   description: string;
@@ -111,6 +134,7 @@ type Recipe = {
   uploadImg: string;
   category: string;
   ethnicity: string;
+  cookTime: string;
 };
 
 export default function EditRecipe() {
@@ -213,8 +237,26 @@ export default function EditRecipe() {
             />
           ) : (
             <Box component='form' onSubmit={handleSubmit} sx={{ mt: 3 }}>
-              <Grid container spacing={2} rowGap={1}>
-                <Grid item xs={12}>
+              <Grid
+                container
+                spacing={2}
+                rowGap={1}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  sx={{
+                    "& .MuiTextField-root": { width: "46ch" },
+                    "@media (max-width:420px)": {
+                      "& .MuiTextField-root": { width: "26ch" },
+                    },
+                  }}
+                >
                   <TextField
                     color='secondary'
                     fullWidth
@@ -225,6 +267,25 @@ export default function EditRecipe() {
                     value={editRecipe.name}
                     onChange={handleChange}
                   />
+                </Grid>
+                <Grid item xs={3} sm={3}>
+                  <TextField
+                    id='outlined-select-cookTime'
+                    select
+                    fullWidth
+                    name='cookTime'
+                    label='Time'
+                    color='secondary'
+                    variant='standard'
+                    value={editRecipe.cookTime}
+                    onChange={handleChange}
+                  >
+                    {cookingTime.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
                 <Grid
                   item
@@ -240,7 +301,8 @@ export default function EditRecipe() {
                   <TextField
                     variant='standard'
                     color='secondary'
-                    id='category'
+                    select
+                    id='outlined-select-category'
                     label='Category'
                     name='category'
                     value={editRecipe.category}
@@ -269,6 +331,7 @@ export default function EditRecipe() {
                     variant='standard'
                     color='secondary'
                     id='ethnicity'
+                    fullWidth
                     label='Ethnicity'
                     name='ethnicity'
                     value={editRecipe.ethnicity}

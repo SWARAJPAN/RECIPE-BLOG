@@ -22,11 +22,20 @@ import Divider from "@mui/material/Divider";
 import { useState, useEffect } from "react";
 import { API } from "../lib/axios";
 import { useParams } from "react-router-dom";
-import { Chip, InputAdornment, Pagination, TextField } from "@mui/material";
+import {
+  Checkbox,
+  Chip,
+  InputAdornment,
+  Pagination,
+  TextField,
+} from "@mui/material";
 import RecipePagination from "../components/RecipePagination";
 import SearchBar from "../components/SearchBar";
 import SearchIcon from "@mui/icons-material/Search";
-import LocalDiningIcon from "@mui/icons-material/LocalDining";
+import AvTimerIcon from "@mui/icons-material/AvTimer";
+import { Player } from "@lottiefiles/react-lottie-player";
+import Loader from "../assets/loader.json";
+import { FavoriteBorder, Favorite } from "@mui/icons-material";
 
 const theme = createTheme({
   palette: {
@@ -89,6 +98,8 @@ export default function Album() {
   const [sendSearch, setSendSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [length, setLength] = useState(0);
+  const [skip, setSkip] = useState(0);
 
   const { id } = useParams();
 
@@ -99,81 +110,107 @@ export default function Album() {
     setSearch(e.target.value);
     setSendSearch(e.target.value);
   };
+  const limit = 9;
 
   useEffect(() => {
-    API.get(`recipes?search=${search}&sort={'createdAt':-1}&limit=9`).then(
-      (res) => {
+    //loader on page load and search
+    // setLoading(true);
+    // API.get(`recipes`).then((res) => {
+    //   setLength(res.data.count);
+    //   console.log(res.data.count, "length");
+
+    //   setLoading(false);
+    // });
+    const fetchRecipes = setTimeout(() => {
+      setLoading(true);
+      API.get(
+        `recipes?search=${search}&sort={'createdAt':-1}&skip=${skip}&limit=${limit}`
+      ).then((res) => {
         setRecipes(res.data.recipe);
         console.log(res.data.recipe);
-      }
-    );
-  }, [search]);
+
+        setLoading(false);
+      });
+    }, 500);
+
+    return () => clearTimeout(fetchRecipes);
+
+    //api call for pagination
+  }, [search, skip, limit]);
+
+  console.log(skip, "length");
+  const pages = Math.floor(length / limit);
+  console.log("pages", pages);
 
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box
+        sx={{
+          pt: 8,
+          pb: 4,
+        }}
+      >
+        <Container maxWidth='md'>
+          <Typography
+            component='h1'
+            variant='h2'
+            display={{ xs: "none", sm: "block" }}
+          >
+            Find your next recipe!
+          </Typography>
+        </Container>
+      </Box>
+      {/* <-----------------Search Bar-----------------> */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mb: 2,
+          mt: 1,
 
-        <Box
-          sx={{
-            bgcolor: "background.blue",
-            pt: 8,
-            pb: 4,
-          }}
-        >
-          <Container maxWidth='md'>
-            <Typography
-              component='h1'
-              variant='h2'
-              display={{ xs: "none", sm: "block" }}
-            >
-              Find your next recipe!
-            </Typography>
-          </Container>
-        </Box>
-        {/* <-----------------Search Bar-----------------> */}
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+          "@media (max-width:420px)": {
             mb: 2,
             mt: 1,
+          },
+        }}
+      >
+        <TextField
+          id='input-with-icon-textfield'
+          placeholder='Search by name or ethnicity...'
+          color='secondary'
+          onChange={handleSearch}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+          variant='standard'
+          sx={{
+            position: "relative",
 
+            justifyContent: "center",
+            alignContent: "center",
+            margin: "auto",
+            width: "50%",
             "@media (max-width:420px)": {
-              mb: 2,
-              mt: 1,
+              width: "90%",
             },
           }}
-        >
-          <TextField
-            id='input-with-icon-textfield'
-            placeholder='Search by name, ethnicity or category...'
-            color='secondary'
-            onChange={handleSearch}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            variant='standard'
-            sx={{
-              position: "relative",
+        />
+      </Box>
 
-              justifyContent: "center",
-              alignContent: "center",
-              margin: "auto",
-              width: "50%",
-              "@media (max-width:420px)": {
-                width: "90%",
-              },
-            }}
-          />
-        </Box>
-
+      {loading ? (
+        <Player
+          autoplay
+          loop
+          src={Loader}
+          style={{ height: "300px", width: "300px" }}
+        />
+      ) : (
         <Container sx={{ py: 8, mb: 2 }} maxWidth='lg'>
           <Grid container spacing={6}>
             {recipes
@@ -190,6 +227,7 @@ export default function Album() {
                         boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
                         borderRadius: "10px",
                         transition: "all 0.2s ease-in-out",
+                        cursor: "pointer",
                         "&:hover": {
                           transform: "scale(1.1)",
                         },
@@ -204,6 +242,8 @@ export default function Album() {
                         sx={{
                           16: 9,
                           overflow: "hidden",
+                          cursor: "default",
+                          objectFit: "cover",
                           "@media (max-width:420px)": {
                             height: "50%",
                           },
@@ -213,22 +253,19 @@ export default function Album() {
                       />
 
                       <Chip
-                        icon={<LocalDiningIcon />}
-                        label={recipe.category}
+                        icon={<AvTimerIcon />}
+                        label={recipe.cookTime}
+                        className='chip'
+                        variant='outlined'
                         sx={{
-                          position: "absolute",
-                          top: "0",
-                          right: "0",
-                          margin: "0.6rem",
-                          color: "secondary",
-                          backgroundColor: "white",
-                          "&:hover": {
-                            backgroundColor: "rgba(0,0,0,0.5)",
+                          ":hover": {
+                            backgroundColor: "white",
+                            color: "black",
                           },
                         }}
                       />
 
-                      <CardContent sx={{ flexGrow: 1 }}>
+                      <CardContent sx={{ flexGrow: 1, paddingBottom: "0" }}>
                         <Box
                           sx={{
                             display: "flex",
@@ -251,6 +288,21 @@ export default function Album() {
                             {recipe.ethnicity}
                           </Typography>
                         </Box>
+                        <Typography
+                          variant='subtitle1'
+                          component='h2'
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            fontSize: "0.9rem",
+                          }}
+                        >
+                          <Favorite
+                            color='primary'
+                            sx={{ marginRight: "5px", size: "0.9rem" }}
+                          />
+                          {recipe.likedBy.length} likes
+                        </Typography>
                       </CardContent>
                       <CardActions>
                         <NavLink
@@ -285,36 +337,38 @@ export default function Album() {
               })}
           </Grid>
         </Container>
+      )}
+      {loading ? null : (
+        <RecipePagination pages={pages + 1} setSkip={setSkip} limit={limit} />
+      )}
 
-        <RecipePagination />
-        {login ? (
-          <Typography
-            color={theme.palette.secondary.main}
-            variant='subtitle1'
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              margin: "auto",
-              width: "50%",
-              mt: 4,
-            }}
-          >
-            Welcome {login.user}!
-          </Typography>
-        ) : (
-          <Typography variant='subtitle1' align='center' sx={{ mt: 12 }}>
-            If you want to share your own recipe with us, please{" "}
-            <NavLink to='/signup'>
-              <Link fontWeight={"bold"} variant='body1'>
-                Sign Up.
-              </Link>
-            </NavLink>
-          </Typography>
-        )}
-        <Footer />
-      </ThemeProvider>
-    </>
+      {login ? (
+        <Typography
+          color={theme.palette.secondary.main}
+          variant='subtitle1'
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "auto",
+            width: "50%",
+            mt: 4,
+          }}
+        >
+          Welcome {login.user}!
+        </Typography>
+      ) : (
+        <Typography variant='subtitle1' align='center' sx={{ mt: 12 }}>
+          If you want to share your own recipe with us, please{" "}
+          <NavLink to='/signup'>
+            <Link fontWeight={"bold"} variant='body1'>
+              Sign Up.
+            </Link>
+          </NavLink>
+        </Typography>
+      )}
+      <Footer />
+    </ThemeProvider>
   );
 }
 function useDebounce(

@@ -23,6 +23,8 @@ import { useState, useEffect } from "react";
 import { API } from "../lib/axios";
 import { useParams } from "react-router-dom";
 import DeleteModal from "../components/DeleteModal";
+import { Player } from "@lottiefiles/react-lottie-player";
+import Loader from "../assets/loader.json";
 
 const theme = createTheme({
   palette: {
@@ -69,6 +71,7 @@ const theme = createTheme({
 
 export default function UserPublishes() {
   const [openModal, setOpenModal] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
 
   //send the id of the recipe to the modal
   const [recipeId, setRecipeId] = React.useState("");
@@ -81,10 +84,12 @@ export default function UserPublishes() {
   const [showPublishes, setShowPublishes] = useState<any>([]);
 
   useEffect(() => {
+    setLoading(true);
     API.get(`/users/${id}`)
       .then((res) => {
         console.log(res.data.user);
         setShowPublishes(res.data.user.publishedRecipe);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -103,93 +108,105 @@ export default function UserPublishes() {
             Your Publishes
           </Typography>
           <Divider />
+          {loading ? (
+            <Player
+              autoplay
+              loop
+              src={Loader}
+              style={{ height: "300px", width: "300px" }}
+            />
+          ) : (
+            <Grid container spacing={4} mt={4}>
+              {showPublishes.map((publishes: any) => {
+                return (
+                  <Grid item key={publishes._id} xs={12} sm={6} md={4}>
+                    <Card
+                      sx={{
+                        maxHeight: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                        borderRadius: "10px",
 
-          <Grid container spacing={4} mt={4}>
-            {showPublishes.map((publishes: any) => {
-              return (
-                <Grid item key={publishes._id} xs={12} sm={6} md={4}>
-                  <Card
-                    sx={{
-                      maxHeight: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
-                      borderRadius: "10px",
-
-                      transition: "all 0.2s ease-in-out",
-                      "&:hover": {
-                        transform: "scale(1.05)",
-                        opacity: 0.9,
-                      },
-                    }}
-                  >
-                    <NavLink
-                      to={`/detail/${publishes._id}`}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
+                        transition: "all 0.2s ease-in-out",
+                        "&:hover": {
+                          transform: "scale(1.05)",
+                          opacity: 0.9,
+                        },
                       }}
                     >
-                      <CardMedia
-                        component='img'
-                        image={publishes.uploadImg}
-                        alt='random'
-                        sx={{
-                          overflow: "hidden",
-                        }}
-                      />
-                      <CardContent sx={{ flexGrow: 1 }}>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Typography gutterBottom variant='h6' component='h2'>
-                            {publishes.name}
-                          </Typography>
-                          <Typography variant='subtitle1'>
-                            {publishes.ethnicity}
-                          </Typography>
-                        </Box>
-                      </CardContent>
-                    </NavLink>
-                    <CardActions>
                       <NavLink
-                        state={publishes}
-                        to={`/edit/${publishes._id}`}
+                        to={`/detail/${publishes._id}`}
                         style={{
                           textDecoration: "none",
                           color: "black",
                         }}
                       >
-                        <Button size='small' color='primary'>
-                          Edit
-                        </Button>
+                        <CardMedia
+                          component='img'
+                          image={publishes.uploadImg}
+                          alt='random'
+                          sx={{
+                            overflow: "hidden",
+                          }}
+                        />
+                        <CardContent sx={{ flexGrow: 1 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography
+                              gutterBottom
+                              variant='h6'
+                              component='h2'
+                            >
+                              {publishes.name}
+                            </Typography>
+                            <Typography variant='subtitle1'>
+                              {publishes.ethnicity}
+                            </Typography>
+                          </Box>
+                        </CardContent>
                       </NavLink>
+                      <CardActions>
+                        <NavLink
+                          state={publishes}
+                          to={`/edit/${publishes._id}`}
+                          style={{
+                            textDecoration: "none",
+                            color: "black",
+                          }}
+                        >
+                          <Button size='small' color='primary'>
+                            Edit
+                          </Button>
+                        </NavLink>
 
-                      <Button
-                        onClick={() => {
-                          setOpenModal(true);
+                        <Button
+                          onClick={() => {
+                            setOpenModal(true);
 
-                          setRecipeId(publishes._id);
-                        }}
-                        size='small'
-                      >
-                        Delete
-                      </Button>
-                      <DeleteModal
-                        open={openModal}
-                        recipeId={recipeId}
-                        onClose={() => setOpenModal(false)}
-                      />
-                    </CardActions>
-                  </Card>
-                </Grid>
-              );
-            })}
-          </Grid>
+                            setRecipeId(publishes._id);
+                          }}
+                          size='small'
+                        >
+                          Delete
+                        </Button>
+                        <DeleteModal
+                          open={openModal}
+                          recipeId={recipeId}
+                          onClose={() => setOpenModal(false)}
+                        />
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          )}
         </Container>
       </Box>
       <Footer />

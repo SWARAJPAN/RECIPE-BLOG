@@ -4,6 +4,9 @@ import Box from "@mui/material/Box";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { NavLink, useNavigate } from "react-router-dom";
+import Restrict from "../assets/restric.json";
+import Cat from "../assets/cat.json";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 export default function ModalDialog(props: any) {
   return (
@@ -42,34 +45,68 @@ export default function ModalDialog(props: any) {
           sx={{
             p: 4,
             pt: 2,
+            pb: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Typography
             id='modal-modal-title'
             variant='body1'
             component='h4'
-            sx={{ fontWeight: "bold" }}
+            sx={{ fontWeight: "bold", mb: 2 }}
           >
             Uh-oh, Looks like you need to login first!
           </Typography>
+          <Player
+            autoplay
+            loop
+            src={Cat}
+            style={{
+              height: "200px",
+              width: "200px",
+            }}
+          >
+            <Typography
+              id='modal-modal-description'
+              variant='subtitle1'
+              sx={{ mt: 1, mb: 1, textAlign: "center", fontWeight: "bold" }}
+            >
+              <span>
+                {" "}
+                <NavLink
+                  to='/signin'
+                  style={{
+                    textDecoration: "none",
+                    color: "#FF5757",
+                  }}
+                >
+                  Sign-In
+                </NavLink>
+              </span>
+            </Typography>
+          </Player>
           <Typography
             id='modal-modal-description'
             variant='subtitle1'
-            sx={{ mt: 2 }}
+            sx={{ textAlign: "center" }}
           >
+            {" "}
+            Or if you don't have an account, you can
             <span>
               {" "}
               <NavLink
-                to='/signin'
+                to='/signup'
                 style={{
                   textDecoration: "none",
                   color: "#FF5757",
                 }}
               >
-                Sign-In
+                Sign-Up
               </NavLink>
-            </span>{" "}
-            to bookmark this recipe.
+            </span>
           </Typography>
         </Box>
       </Box>

@@ -121,6 +121,7 @@ export default function AccountMenu() {
             >
               <Typography
                 textAlign='center'
+                fontFamily={"sans-serif"}
                 sx={{
                   "&:hover": {
                     color: red[500],

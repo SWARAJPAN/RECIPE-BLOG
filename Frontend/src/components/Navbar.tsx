@@ -20,6 +20,7 @@ import { createTheme } from "@mui/material/styles";
 import { orange, red } from "@mui/material/colors";
 import { Link } from "react-router-dom";
 import { Logout } from "@mui/icons-material";
+import Logo from "../assets/blob.svg";
 
 // const token: string = JSON.parse(localStorage.getItem("token"));
 
@@ -35,6 +36,8 @@ const theme = createTheme({
     },
   },
   typography: {
+    fontFamily: ["Righteous"].join(","),
+
     subtitle1: { fontSize: 12 },
 
     body1: { fontSize: 16 },
@@ -108,7 +111,6 @@ export default function ResponsiveAppBar() {
           <Toolbar disableGutters>
             <Box
               sx={{
-                // flexGrow: 1,
                 marginRight: 2,
                 display: { xs: "block", md: "flex" },
               }}
@@ -119,8 +121,8 @@ export default function ResponsiveAppBar() {
               sx={{
                 display: { xs: "none", md: "flex" },
                 mr: 1,
-                pr: 2,
-                fontSize: 70,
+
+                fontSize: 50,
               }}
             />
 
@@ -129,49 +131,21 @@ export default function ResponsiveAppBar() {
               noWrap
               component='a'
               sx={{
-                // mr: 2,
-                // ml: auto",
-                display: { xs: "none", md: "flex" },
-                // fontFamily: "Sanchez",
-                fontWeight: 1000,
-                letterSpacing: ".1rem",
-                color: "inherit",
-              }}
-              style={{
-                textDecoration: "none",
-                cursor: "pointer",
-              }}
-            >
-              RECIPES
-            </Typography>
-
-            <RamenDiningIcon
-              sx={{
-                display: { xs: "none", md: "none" },
-                mr: 0.5,
-              }}
-            />
-            <Typography
-              variant='h5'
-              noWrap
-              component='a'
-              href=''
-              sx={{
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                // flexGrow: 1,
-                fontFamily: "Sanchez",
-                fontWeight: 600,
-                // letterSpacing: ".2rem",
+                display: { xs: "flex", md: "flex" },
+                fontWeight: 500,
                 color: "inherit",
                 textDecoration: "none",
                 justifyContent: "space-between",
                 alignContent: "center",
                 margin: "auto",
+                cursor: "pointer",
+                "@media (max-width:420px)": {
+                  fontSize: 25,
+                },
               }}
               style={{ textDecoration: "none" }}
             >
-              RECIPES
+              Recipe Blog
             </Typography>
             <Box
               sx={{
@@ -197,6 +171,7 @@ export default function ResponsiveAppBar() {
                         color: "inherit",
                         display: "block",
                         padding: "4px 20px",
+                        fontFamily: "sans-serif",
                       }}
                     >
                       {page.title}
@@ -221,4 +196,3 @@ export default function ResponsiveAppBar() {
     </ThemeProvider>
   );
 }
-// export default ResponsiveAppBar;

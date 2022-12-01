@@ -5,19 +5,22 @@ const Users = require("../models/userModel");
 const getAllRecipe = async (req, res) => {
   console.log(req.query);
   const { limit, skip, search } = req.query;
+
   try {
     const recipe = await Recipes.find({
       $or: [
         { name: { $regex: `${search}`, $options: "i" } },
         { ethnicity: { $regex: `${search}`, $options: "i" } },
-        { category: { $regex: `${search}`, $options: "i" } },
       ],
     })
       .populate("publishedBy", "firstName lastName")
+      .populate("likedBy" || "bookmarkedBy", "firstName lastName")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
-    res.status(200).json({ message: "success", recipe, length: recipe.length });
+    console.log(recipe.length);
+
+    res.status(200).json({ message: "success", recipe, count: recipe.length });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -58,7 +61,8 @@ const getRecipe = async (req, res) => {
   try {
     const recipe = await Recipes.findById(recipeID)
       .select(eval("(" + req.query.select + ")"))
-      .populate("publishedBy", "firstName lastName ");
+      .populate("publishedBy", "firstName lastName ")
+      .populate("likedBy" || "bookmarkedBy", "firstName lastName");
 
     console.log(recipe);
 
@@ -128,6 +132,64 @@ const bookmarkRecipe = async (req, res) => {
   }
 };
 
+//like a recipe
+
+const likeRecipe = async (req, res) => {
+  const recipeID = req.params.id;
+  try {
+    const recipe = await Recipes.findByIdAndUpdate(recipeID);
+
+    console.log({ recipe });
+
+    if (!recipe) throw new Error("Recipe does not exist");
+    const existUser = recipe.likedBy?.find(
+      (id) => id.toString() === req.user._id.toString(),
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (existUser) {
+      recipe.likedBy = recipe.likedBy.filter(
+        (id) => id.toString() !== req.user._id.toString(),
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+      req.user.likedRecipe = req.user.likedRecipe.filter(
+        (id) => id.toString() !== recipeID.toString(),
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      await recipe.save();
+      await req.user.save(),
+        {
+          new: true,
+          runValidators: true,
+        };
+    } else {
+      recipe.likedBy.push(req.user._id);
+      req.user.likedRecipe.push(recipeID);
+
+      await req.user.save();
+      await recipe.save(),
+        {
+          new: true,
+          runValidators: true,
+        };
+    }
+
+    res.status(200).json({ message: "success", recipe, user: req.user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 //update Recipe: patch method
 const updateRecipe = async (req, res) => {
   const recipeID = req.params.id;
@@ -178,4 +240,5 @@ module.exports = {
   bookmarkRecipe,
   updateRecipe,
   deleteRecipe,
+  likeRecipe,
 };

@@ -30,6 +30,14 @@ const UserSchema = new mongoose.Schema(
         // unique: true,
       },
     ],
+
+    likedRecipe: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "recipe",
+      },
+    ],
+
     bookmarkedRecipe: [
       {
         type: mongoose.Schema.Types.ObjectId,

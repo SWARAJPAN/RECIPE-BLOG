@@ -25,7 +25,11 @@ import { useParams } from "react-router-dom";
 import Modal from "../components/ModalDialog";
 import ModalDialog from "../components/ModalDialog";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
+import AvTimerIcon from "@mui/icons-material/AvTimer";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import { Player } from "@lottiefiles/react-lottie-player";
+import Loader from "../assets/loader.json";
+import { margin } from "@mui/system";
 
 const theme = createTheme({
   palette: {
@@ -88,8 +92,6 @@ const theme = createTheme({
   },
 });
 
-const label = { inputProps: { "aria-label": "Checkbox demo" } };
-
 const getTokenFromLocalStorage = () => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -106,6 +108,9 @@ export default function DetailPage() {
 
   const [openModal, setOpenModal] = React.useState(false);
   const [bookmarked, setBookmarked] = React.useState(false);
+  const [liked, setLiked] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [likeLength, setLikeLength] = React.useState(0);
 
   const params = useParams();
   const id = params.id;
@@ -115,7 +120,7 @@ export default function DetailPage() {
 
   useEffect(() => {
     const user: string = JSON.parse(localStorage.getItem("user") || "{}");
-
+    setLoading(true);
     API.get(`recipes/${id}`)
       .then((res) => {
         console.log(res.data.recipe);
@@ -127,19 +132,54 @@ export default function DetailPage() {
             console.log("bookmark", bookmarked);
           }
         });
+
+        res.data.recipe.likedBy.forEach((like: any) => {
+          console.log("like", like, user, like === user);
+          if (like._id === user) {
+            setLiked(true);
+            console.log("like", liked);
+            setLikeLength(res.data.recipe.likedBy.length);
+          }
+        });
+
+        setLoading(false);
       })
 
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [bookmarked, liked, likeLength]);
+
+  console.log(likeLength, "show likes");
 
   const handleBookmark = () => {
     if (login) {
       API.post(`recipes/${id}/bookmark`)
         .then((res) => {
-          console.log(res.data);
-          setBookmarked(!bookmarked);
+          if (res.status === 200) {
+            setBookmarked(!bookmarked);
+            console.log("bookmark", bookmarked);
+          }
+
+          // console.log(res.data);
+          // setBookmarked(!bookmarked);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setOpenModal(true);
+    }
+  };
+
+  const handleLike = () => {
+    if (login) {
+      API.post(`recipes/${id}/like`)
+        .then((res) => {
+          if (res.status === 200) {
+            setLiked(!liked);
+            setLikeLength(res.data.recipe.likedBy.length);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -157,164 +197,223 @@ export default function DetailPage() {
         sx={{
           marginTop: "4rem",
           display: "flex",
+          justifyContent: "center",
         }}
       >
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            "@media (max-width:420px)": {
-              padding: "0 ",
-            },
-            padding: "2rem",
-          }}
-        >
-          <Grid item xs={12} sm={6} xl={6}>
-            <Typography variant='h3' gutterBottom>
-              {detailRecipe.name}
-            </Typography>
-            <Typography variant='subtitle1' gutterBottom>
-              by{" "}
-              <span style={{ color: "#CB692D" }}>
-                {detailRecipe.publishedBy?.firstName}{" "}
-                {detailRecipe.publishedBy?.lastName}
-              </span>
-            </Typography>
+        {loading ? (
+          <Player
+            autoplay
+            loop
+            src={Loader}
+            style={{
+              height: "300px",
+              width: "300px",
+              marginTop: "30%",
+              margin: "0",
+            }}
+          />
+        ) : (
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              "@media (max-width:420px)": {
+                padding: "0 ",
+              },
+              padding: "2rem",
+            }}
+          >
             <Grid
               item
-              container
-              direction='row'
-              justifyContent='space-evenly'
-              xl={5}
-              xs={6}
-              md={8}
-              mb={3}
-              mt={3}
-              // width='40%'
+              xs={12}
+              sm={6}
+              xl={6}
+              paddingRight={3}
               sx={{
                 "@media (max-width:420px)": {
-                  justifyContent: "space-between",
-                  width: "100%",
+                  padding: "0 ",
                 },
               }}
             >
-              <Typography variant='body1' gutterBottom>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <LocalDiningIcon
-                    sx={{
-                      mr: "7px",
-                      "@media (max-width:420px)": {
-                        paddingLeft: "5px",
-                        mr: "5px",
-                      },
-                    }}
-                  />{" "}
-                  {detailRecipe.category}
-                </div>
+              <Typography variant='h3' gutterBottom>
+                {detailRecipe.name}
               </Typography>
-              <Typography variant='body1' gutterBottom>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <PeopleAltIcon
-                    sx={{
-                      mr: "7px",
-
-                      "@media (max-width:420px)": {
-                        paddingLeft: "5px",
-                        mr: "5px",
-                        ml: "2px",
-                      },
-                    }}
-                  />{" "}
-                  {detailRecipe.ethnicity}
-                </div>
+              <Typography variant='subtitle1' gutterBottom>
+                by{" "}
+                <span style={{ color: "#CB692D" }}>
+                  {detailRecipe.publishedBy?.firstName}{" "}
+                  {detailRecipe.publishedBy?.lastName}
+                </span>
               </Typography>
-            </Grid>
-            <Typography variant='subtitle1' mb={4}>
-              {detailRecipe.description}
-            </Typography>
-            <Grid item container direction='column' xs={12} sm={12}>
-              <Grid item>
-                <Typography variant='body1' gutterBottom>
-                  Ingredients
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant='subtitle1' mb={4}>
-                  {detailRecipe.ingredients}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item sx={{ paddingRight: "10px" }}>
-              <Typography variant='body1' gutterBottom>
-                Instruction:
-              </Typography>
-              <Typography variant='subtitle1'>
-                {detailRecipe.instruction}
-              </Typography>
-            </Grid>
-          </Grid>
-
-          <Grid item xs={12} sm={6} xl={6}>
-            <Grid item>
-              <Card>
-                <CardMedia
-                  component='img'
-                  image={detailRecipe.uploadImg}
-                  alt='pasta'
-                  height='500'
-                  //   sx={{ boxShadow: "0" }}
-                />
-              </Card>
-              <Box
-                mt={4}
+              <Grid
+                item
+                container
+                direction='row'
+                justifyContent='space-evenly'
+                xl={5}
+                xs={6}
+                md={8}
+                mb={3}
+                mt={3}
+                // width='40%'
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  verticalAlign: "top",
                   "@media (max-width:420px)": {
-                    flexDirection: "column",
-                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
                   },
                 }}
               >
-                <Typography variant='subtitle1'>
-                  Like this recipe?{" "}
-                  <Checkbox
-                    {...label}
-                    icon={<FavoriteBorder />}
-                    checkedIcon={<Favorite />}
-                  />
+                <Typography variant='body1' gutterBottom>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <LocalDiningIcon
+                      sx={{
+                        mr: "7px",
+                        "@media (max-width:420px)": {
+                          paddingLeft: "5px",
+                          mr: "5px",
+                        },
+                      }}
+                    />{" "}
+                    {detailRecipe.category}
+                  </div>
+                </Typography>
+                <Typography variant='body1' gutterBottom>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <PeopleAltIcon
+                      sx={{
+                        mr: "7px",
+
+                        "@media (max-width:420px)": {
+                          paddingLeft: "5px",
+                          mr: "5px",
+                          ml: "2px",
+                        },
+                      }}
+                    />{" "}
+                    {detailRecipe.ethnicity}
+                  </div>
+                </Typography>
+              </Grid>
+              <Typography variant='subtitle1' mb={4}>
+                {detailRecipe.description}
+              </Typography>
+              <Grid item container direction='column' xs={12} sm={12}>
+                <Grid item>
+                  <Typography variant='body1' gutterBottom>
+                    Ingredients
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant='subtitle1' mb={4}>
+                    {detailRecipe.ingredients}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid item sx={{ paddingRight: "10px" }}>
+                <Typography variant='body1' gutterBottom>
+                  Instruction:
                 </Typography>
 
-                <Button
-                  onClick={handleBookmark}
-                  size='small'
-                  variant='outlined'
+                <Typography variant='subtitle1'>
+                  {detailRecipe.instruction}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12} sm={6} xl={6}>
+              <Grid item>
+                <Card
                   sx={{
-                    height: "2.5rem",
-                    lineHeight: "1rem",
-                    width: "50%",
-                    "&:hover": {
-                      backgroundColor: "primary.main",
-                      color: "white",
-                    },
+                    position: "relative",
                     "@media (max-width:420px)": {
                       width: "100%",
                     },
                   }}
                 >
-                  <BookmarkIcon sx={{ marginRight: "5px" }} />{" "}
-                  {bookmarked ? "Bookmarked! " : "Bookmark this recipe?"}
-                </Button>
+                  <CardMedia
+                    component='img'
+                    image={detailRecipe.uploadImg}
+                    alt='image'
+                    height='500'
+                  />
 
-                <ModalDialog
-                  open={openModal}
-                  onClose={() => setOpenModal(false)}
-                />
-              </Box>
+                  <Chip
+                    icon={<AvTimerIcon />}
+                    label={detailRecipe.cookTime}
+                    className='chip'
+                    color='primary'
+                  />
+                </Card>
+                <Box
+                  mt={4}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    verticalAlign: "top",
+                    "@media (max-width:420px)": {
+                      flexDirection: "column",
+                      alignItems: "center",
+                    },
+                  }}
+                >
+                  <Typography
+                    variant='subtitle1'
+                    sx={{
+                      width: "50%",
+                      height: "2.5rem",
+
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+
+                      "@media (max-width:420px)": {
+                        marginBottom: "10px",
+                        width: "100%",
+                      },
+                    }}
+                  >
+                    {/* {liked ? "Liked!" : "Like this recipe?"}{" "} */}
+                    <Checkbox
+                      checked={liked}
+                      onClick={handleLike}
+                      inputProps={{ "aria-label": "controlled" }}
+                      icon={<FavoriteBorder />}
+                      checkedIcon={<Favorite />}
+                    />
+                    {liked ? `${likeLength} Likes` : "Like this recipe?"}
+                  </Typography>
+
+                  <Button
+                    onClick={handleBookmark}
+                    size='small'
+                    variant='outlined'
+                    sx={{
+                      height: "2.5rem",
+                      lineHeight: "1rem",
+
+                      width: "50%",
+                      "&:hover": {
+                        backgroundColor: "primary.main",
+                        color: "white",
+                      },
+                      "@media (max-width:420px)": {
+                        width: "100%",
+                      },
+                    }}
+                  >
+                    <BookmarkIcon sx={{ marginRight: "5px" }} />{" "}
+                    {bookmarked ? "Bookmarked! " : "Bookmark this recipe?"}
+                  </Button>
+
+                  <ModalDialog
+                    open={openModal}
+                    onClose={() => setOpenModal(false)}
+                  />
+                </Box>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
       </Container>
       <Footer />
     </ThemeProvider>

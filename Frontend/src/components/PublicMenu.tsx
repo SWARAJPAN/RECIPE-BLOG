@@ -92,7 +92,9 @@ export default function PublicMenu() {
             style={{ textDecoration: "none", color: "black" }}
           >
             <MenuItem key={page.id} onClick={handleCloseNavMenu}>
-              <Typography textAlign='center'>{page.title}</Typography>
+              <Typography textAlign='center' fontFamily='sans-serif'>
+                {page.title}
+              </Typography>
             </MenuItem>
           </NavLink>
         ))}

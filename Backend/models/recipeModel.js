@@ -16,9 +16,6 @@ const RecipeSchema = new mongoose.Schema(
       type: String,
       // required: true,
     },
-    likes: {
-      type: Number,
-    },
 
     instruction: {
       type: String,
@@ -37,6 +34,10 @@ const RecipeSchema = new mongoose.Schema(
       ref: "users",
     },
 
+    cookTime: {
+      type: String,
+      trim: true,
+    },
     uploadImg: [
       {
         type: String,
@@ -44,6 +45,13 @@ const RecipeSchema = new mongoose.Schema(
     ],
 
     bookmarkedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
+
+    likedBy: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",

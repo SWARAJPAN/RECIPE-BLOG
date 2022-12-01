@@ -51,9 +51,9 @@ const theme = createTheme({
 
   typography: {
     h2: {
-      // fontSize: 12,
       color: "#676A6B",
       fontWeight: 600,
+
       width: "100vw",
       textAlign: "center",
       justifyContent: "center",
@@ -103,6 +103,29 @@ const categoryType = [
   },
 ];
 
+const cookingTime = [
+  {
+    value: "15mins",
+    label: "15mins",
+  },
+  {
+    value: "30mins",
+    label: "30mins",
+  },
+  {
+    value: "45mins",
+    label: "45mins",
+  },
+  {
+    value: "1hr+",
+    label: "1hr+",
+  },
+  {
+    value: "2hr+",
+    label: "2hr+",
+  },
+];
+
 const validationSchema = yup.object({
   name: yup
     .string()
@@ -135,6 +158,8 @@ const validationSchema = yup.object({
     .required("Plsease provide an instruction")
     .trim("Cannot contain spaces"),
   category: yup.string().required("Please select a category"),
+  cookTime: yup.string().required("Required"),
+  uploadImg: yup.string().required("Please select an image"),
 });
 
 interface Values {
@@ -145,6 +170,7 @@ interface Values {
   instruction: string;
   category: string;
   uploadImg: string;
+  cookTime: string;
 }
 
 const getTokenFromLocalStorage = () => {
@@ -188,6 +214,7 @@ export default function Publish() {
       instruction: "",
       category: "",
       uploadImg: "",
+      cookTime: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values: Values) => {
@@ -255,16 +282,10 @@ export default function Publish() {
               transform: "scale(1.3)",
             }}
           >
-            {/* <Player
-            autoplay
-            loop
-            src={Register}
-            style={{ height: "200px", width: "200px" }}
-          /> */}
             <HistoryEduIcon />
           </Avatar>
           <Typography
-            component='h1'
+            component='h2'
             variant='h2'
             sx={{
               display: "flex",
@@ -279,8 +300,26 @@ export default function Publish() {
           </Typography>
           <Box sx={{ mt: 3 }}>
             <form onSubmit={formik.handleSubmit}>
-              <Grid container spacing={2} rowGap={1}>
-                <Grid item xs={12}>
+              <Grid
+                container
+                spacing={2}
+                rowGap={1}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  sx={{
+                    "& .MuiTextField-root": { width: "46ch" },
+                    "@media (max-width:420px)": {
+                      "& .MuiTextField-root": { width: "26ch" },
+                    },
+                  }}
+                >
                   <TextField
                     variant='standard'
                     // autoFocus
@@ -294,6 +333,31 @@ export default function Publish() {
                     error={formik.touched.name && Boolean(formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
                   />
+                </Grid>
+                <Grid item xs={3} sm={3}>
+                  <TextField
+                    id='outlined-select-cookTime'
+                    select
+                    fullWidth
+                    name='cookTime'
+                    label='Time'
+                    color='secondary'
+                    variant='standard'
+                    value={formik.values.cookTime}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.cookTime && Boolean(formik.errors.cookTime)
+                    }
+                    helperText={
+                      formik.touched.cookTime && formik.errors.cookTime
+                    }
+                  >
+                    {cookingTime.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
                 <Grid
                   item
@@ -312,6 +376,7 @@ export default function Publish() {
                     name='category'
                     label='Category'
                     color='secondary'
+                    variant='standard'
                     value={formik.values.category}
                     onChange={formik.handleChange}
                     error={
@@ -320,7 +385,6 @@ export default function Publish() {
                     helperText={
                       formik.touched.category && formik.errors.category
                     }
-                    variant='standard'
                   >
                     {categoryType.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
@@ -435,7 +499,8 @@ export default function Publish() {
                       },
                     }}
                   >
-                    <PhotoCamera /> <Typography>Upload Image</Typography>
+                    <PhotoCamera />
+                    <Typography>Upload Image</Typography>
                     <input
                       hidden
                       accept='image/png, image/jpeg, image/jpg, image/gif,'

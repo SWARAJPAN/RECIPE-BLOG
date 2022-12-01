@@ -11,6 +11,7 @@ const {
   bookmarkRecipe,
   updateRecipe,
   deleteRecipe,
+  likeRecipe,
 } = require("../controller/recipeController");
 
 router.get("/recipes", getAllRecipe);
@@ -19,5 +20,6 @@ router.post("/recipes", auth, createRecipe);
 router.patch("/recipes/:id", auth, updateRecipe);
 router.delete("/recipes/:id", auth, deleteRecipe);
 router.post("/recipes/:id/bookmark", auth, bookmarkRecipe);
+router.post("/recipes/:id/like", auth, likeRecipe);
 
 module.exports = router;
