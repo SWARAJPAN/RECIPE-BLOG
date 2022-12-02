@@ -25,6 +25,9 @@ import { useParams } from "react-router-dom";
 import DeleteModal from "../components/DeleteModal";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Loader from "../assets/loader.json";
+import { Chip } from "@mui/material";
+import AvTimerIcon from "@mui/icons-material/AvTimer";
+import { FavoriteBorder, Favorite } from "@mui/icons-material";
 
 const theme = createTheme({
   palette: {
@@ -127,11 +130,10 @@ export default function UserPublishes() {
                         flexDirection: "column",
                         boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
                         borderRadius: "10px",
-
+                        position: "relative",
                         transition: "all 0.2s ease-in-out",
                         "&:hover": {
                           transform: "scale(1.05)",
-                          opacity: 0.9,
                         },
                       }}
                     >
@@ -147,15 +149,37 @@ export default function UserPublishes() {
                           image={publishes.uploadImg}
                           alt='random'
                           sx={{
+                            height: "30vh",
                             overflow: "hidden",
+
+                            objectFit: "cover",
+                            "@media (max-width:420px)": {
+                              height: "20vh",
+                            },
                           }}
                         />
-                        <CardContent sx={{ flexGrow: 1 }}>
+
+                        <Chip
+                          icon={<AvTimerIcon />}
+                          label={publishes.cookTime}
+                          className='chip'
+                          sx={{
+                            ":hover": {
+                              backgroundColor: "white",
+                              color: "black",
+                            },
+                          }}
+                        />
+                        <CardContent
+                          sx={{
+                            flexGrow: 1,
+                          }}
+                        >
                           <Box
                             sx={{
                               display: "flex",
                               justifyContent: "space-between",
-                              alignItems: "center",
+                              alignItems: "baseline",
                             }}
                           >
                             <Typography
@@ -169,6 +193,21 @@ export default function UserPublishes() {
                               {publishes.ethnicity}
                             </Typography>
                           </Box>
+                          <Typography
+                            variant='subtitle1'
+                            component='h2'
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              fontSize: "0.9rem",
+                            }}
+                          >
+                            <Favorite
+                              color='primary'
+                              sx={{ marginRight: "5px", size: "0.9rem" }}
+                            />
+                            {publishes.likedBy.length} likes
+                          </Typography>
                         </CardContent>
                       </NavLink>
                       <CardActions>

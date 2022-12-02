@@ -93,11 +93,11 @@ const getOneUser = async (req, res) => {
     const user = await Users.findById(userId)
       .populate(
         "bookmarkedRecipe",
-        "name category createdAt ethnicity uploadImg "
+        "name category createdAt ethnicity uploadImg cookTime likedBy"
       )
       .populate(
         "publishedRecipe",
-        "name category createdAt ethnicity uploadImg"
+        "name category createdAt ethnicity uploadImg cookTime likedBy"
       );
 
     if (!user) {

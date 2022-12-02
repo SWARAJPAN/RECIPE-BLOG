@@ -159,7 +159,6 @@ const validationSchema = yup.object({
     .trim("Cannot contain spaces"),
   category: yup.string().required("Please select a category"),
   cookTime: yup.string().required("Required"),
-  uploadImg: yup.string().required("Please select an image"),
 });
 
 interface Values {
@@ -169,7 +168,7 @@ interface Values {
   ethnicity: string;
   instruction: string;
   category: string;
-  uploadImg: string;
+
   cookTime: string;
 }
 
@@ -188,7 +187,6 @@ console.log(userId);
 export default function Publish() {
   const [login, setLogin] = React.useState(getTokenFromLocalStorage);
   const [image, setImage] = React.useState(null);
-  const [showRecipeId, setShowRecipeId] = React.useState<any>();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -197,13 +195,6 @@ export default function Publish() {
 
   const params = useParams();
   console.log(params.id);
-
-  React.useEffect(() => {
-    API.get(`/recipes`).then((res) => {
-      setShowRecipeId(res.data.recipe);
-    });
-  }, []);
-  console.log(showRecipeId, "show recipe ID");
 
   const formik = useFormik({
     initialValues: {
@@ -258,6 +249,13 @@ export default function Publish() {
     getBase64(file, (result: any) => {
       setImage(result);
     });
+  };
+
+  // show uploaded image
+  const showImage = () => {
+    if (image) {
+      uploadImage(image);
+    }
   };
 
   return (
@@ -506,8 +504,7 @@ export default function Publish() {
                       accept='image/png, image/jpeg, image/jpg, image/gif,'
                       multiple
                       type='file'
-                      value={formik.values.uploadImg}
-                      onChange={uploadImage}
+                      onChange={showImage}
                       style={{
                         display: "none",
                       }}

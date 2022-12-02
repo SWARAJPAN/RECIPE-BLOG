@@ -24,3 +24,7 @@
   height: 3rem;
   font-weight: 500;
 }
+
+.css-2r3irp-MuiCardContent-root:last-child {
+  padding-bottom: 0px;
+}

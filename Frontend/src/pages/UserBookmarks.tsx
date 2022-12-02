@@ -24,6 +24,9 @@ import { API } from "../lib/axios";
 import { useParams } from "react-router-dom";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Loader from "../assets/loader.json";
+import { Chip } from "@mui/material";
+import AvTimerIcon from "@mui/icons-material/AvTimer";
+import { FavoriteBorder, Favorite } from "@mui/icons-material";
 
 const theme = createTheme({
   palette: {
@@ -118,16 +121,15 @@ export default function UserBookmarks() {
                   <Grid item key={bookmark._id} xs={12} sm={6} md={4}>
                     <Card
                       sx={{
-                        maxHeight: "100%",
+                        maxHeight: "85%",
                         display: "flex",
                         flexDirection: "column",
                         boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
                         borderRadius: "10px",
-
+                        position: "relative",
                         transition: "all 0.2s ease-in-out",
                         "&:hover": {
                           transform: "scale(1.05)",
-                          opacity: 0.9,
                         },
                       }}
                     >
@@ -136,10 +138,28 @@ export default function UserBookmarks() {
                         image={bookmark.uploadImg}
                         alt='random'
                         sx={{
+                          height: "30vh",
                           overflow: "hidden",
+                          cursor: "default",
+                          objectFit: "cover",
+                          "@media (max-width:420px)": {
+                            height: "20vh",
+                          },
                         }}
                       />
-                      <CardContent sx={{ flexGrow: 1 }}>
+                      <Chip
+                        icon={<AvTimerIcon />}
+                        label={bookmark.cookTime}
+                        className='chip'
+                        variant='outlined'
+                        sx={{
+                          ":hover": {
+                            backgroundColor: "white",
+                            color: "black",
+                          },
+                        }}
+                      />
+                      <CardContent sx={{ flexGrow: 1, paddingBottom: 0 }}>
                         <Box
                           sx={{
                             display: "flex",
@@ -154,6 +174,21 @@ export default function UserBookmarks() {
                             {bookmark.ethnicity}
                           </Typography>
                         </Box>
+                        <Typography
+                          variant='subtitle1'
+                          component='h2'
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            fontSize: "0.9rem",
+                          }}
+                        >
+                          <Favorite
+                            color='primary'
+                            sx={{ marginRight: "5px", size: "0.9rem" }}
+                          />
+                          {bookmark.likedBy.length} likes
+                        </Typography>
                       </CardContent>
                       <CardActions>
                         <Button

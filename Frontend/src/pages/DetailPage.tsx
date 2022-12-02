@@ -125,7 +125,7 @@ export default function DetailPage() {
       .then((res) => {
         console.log(res.data.recipe);
         setDetailRecipe(res.data.recipe);
-
+        setLoading(false);
         res.data.recipe.bookmarkedBy.forEach((bookmark: any) => {
           if (bookmark === user) {
             setBookmarked(true);
@@ -141,12 +141,13 @@ export default function DetailPage() {
             setLikeLength(res.data.recipe.likedBy.length);
           }
         });
-
-        setLoading(false);
       })
 
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [bookmarked, liked, likeLength]);
 
@@ -238,33 +239,63 @@ export default function DetailPage() {
               <Typography variant='h3' gutterBottom>
                 {detailRecipe.name}
               </Typography>
-              <Typography variant='subtitle1' gutterBottom>
-                by{" "}
-                <span style={{ color: "#CB692D" }}>
-                  {detailRecipe.publishedBy?.firstName}{" "}
-                  {detailRecipe.publishedBy?.lastName}
-                </span>
-              </Typography>
               <Grid
-                item
-                container
-                direction='row'
-                justifyContent='space-evenly'
-                xl={5}
-                xs={6}
-                md={8}
-                mb={3}
-                mt={3}
-                // width='40%'
                 sx={{
-                  "@media (max-width:420px)": {
-                    justifyContent: "space-between",
-                    width: "100%",
-                  },
+                  ml: 0.5,
                 }}
               >
-                <Typography variant='body1' gutterBottom>
-                  <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography variant='subtitle1' gutterBottom>
+                  by{" "}
+                  <span style={{ color: "#CB692D" }}>
+                    {detailRecipe.publishedBy?.firstName}{" "}
+                    {detailRecipe.publishedBy?.lastName}
+                  </span>
+                  <span
+                    style={{
+                      color: "grey",
+                      fontStyle: "italic",
+                      fontSize: "0.8rem",
+                      marginLeft: "0.5rem",
+                    }}
+                  >
+                    {detailRecipe.createdAt
+                      ?.slice(0, 10)
+                      .split("-")
+                      .reverse()
+                      .join("-")}
+                  </span>
+                </Typography>
+                <Grid
+                  item
+                  container
+                  direction='row'
+                  justifyContent='flex-start'
+                  xl={5}
+                  xs={6}
+                  md={8}
+                  mb={3}
+                  mt={3}
+                  // width='40%'
+                  sx={{
+                    alignItems: "baseline",
+                    "@media (max-width:420px)": {
+                      justifyContent: "space-between",
+                      width: "100%",
+                    },
+                  }}
+                >
+                  <Typography
+                    variant='body1'
+                    gutterBottom
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "20px",
+                      "@media (max-width:420px)": {
+                        marginRight: "0",
+                      },
+                    }}
+                  >
                     <LocalDiningIcon
                       sx={{
                         mr: "7px",
@@ -275,48 +306,48 @@ export default function DetailPage() {
                       }}
                     />{" "}
                     {detailRecipe.category}
-                  </div>
-                </Typography>
-                <Typography variant='body1' gutterBottom>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <PeopleAltIcon
-                      sx={{
-                        mr: "7px",
-
-                        "@media (max-width:420px)": {
-                          paddingLeft: "5px",
-                          mr: "5px",
-                          ml: "2px",
-                        },
-                      }}
-                    />{" "}
-                    {detailRecipe.ethnicity}
-                  </div>
-                </Typography>
-              </Grid>
-              <Typography variant='subtitle1' mb={4}>
-                {detailRecipe.description}
-              </Typography>
-              <Grid item container direction='column' xs={12} sm={12}>
-                <Grid item>
+                  </Typography>
                   <Typography variant='body1' gutterBottom>
-                    Ingredients
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant='subtitle1' mb={4}>
-                    {detailRecipe.ingredients}
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid item sx={{ paddingRight: "10px" }}>
-                <Typography variant='body1' gutterBottom>
-                  Instruction:
-                </Typography>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <PeopleAltIcon
+                        sx={{
+                          mr: "7px",
 
-                <Typography variant='subtitle1'>
-                  {detailRecipe.instruction}
+                          "@media (max-width:420px)": {
+                            paddingLeft: "5px",
+                            mr: "5px",
+                            ml: "2px",
+                          },
+                        }}
+                      />{" "}
+                      {detailRecipe.ethnicity}
+                    </div>
+                  </Typography>
+                </Grid>
+                <Typography variant='subtitle1' mb={4}>
+                  {detailRecipe.description}
                 </Typography>
+                <Grid item container direction='column' xs={12} sm={12}>
+                  <Grid item>
+                    <Typography variant='body1' gutterBottom>
+                      Ingredients
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant='subtitle1' mb={4}>
+                      {detailRecipe.ingredients}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item sx={{ paddingRight: "10px" }}>
+                  <Typography variant='body1' gutterBottom>
+                    Instruction:
+                  </Typography>
+
+                  <Typography variant='subtitle1'>
+                    {detailRecipe.instruction}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
 
@@ -372,9 +403,8 @@ export default function DetailPage() {
                       },
                     }}
                   >
-                    {/* {liked ? "Liked!" : "Like this recipe?"}{" "} */}
                     <Checkbox
-                      checked={liked}
+                      checked={liked ? true : false} // if liked is true, then checked is true
                       onClick={handleLike}
                       inputProps={{ "aria-label": "controlled" }}
                       icon={<FavoriteBorder />}

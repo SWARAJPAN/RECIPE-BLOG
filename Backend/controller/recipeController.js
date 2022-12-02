@@ -4,23 +4,37 @@ const Users = require("../models/userModel");
 //get all Recipes
 const getAllRecipe = async (req, res) => {
   console.log(req.query);
-  const { limit, skip, search } = req.query;
+  const { limit, skip, search, time } = req.query;
+
+  const regex = {
+    $or: [
+      { name: { $regex: `${search}`, $options: "i" } },
+      { ethnicity: { $regex: `${search}`, $options: "i" } },
+    ],
+  };
+
+  const filter = search ? regex : req.query;
 
   try {
-    const recipe = await Recipes.find({
-      $or: [
-        { name: { $regex: `${search}`, $options: "i" } },
-        { ethnicity: { $regex: `${search}`, $options: "i" } },
-      ],
-    })
-      .populate("publishedBy", "firstName lastName")
-      .populate("likedBy" || "bookmarkedBy", "firstName lastName")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-    console.log(recipe.length);
+    const [recipes, total] = await Promise.all([
+      await Recipes.find(
+        filter
+        // $or: [
+        //   { name: { $regex: `${search}`, $options: "i" } },
+        //   { ethnicity: { $regex: `${search}`, $options: "i" } },
+        // ],
+      )
+        .populate("publishedBy", "firstName lastName")
+        .populate("likedBy" || "bookmarkedBy", "firstName lastName")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
 
-    res.status(200).json({ message: "success", recipe, count: recipe.length });
+      await Recipes.countDocuments(),
+    ]);
+    console.log(recipes, total);
+
+    res.status(200).json({ message: "success", recipes, count: total });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

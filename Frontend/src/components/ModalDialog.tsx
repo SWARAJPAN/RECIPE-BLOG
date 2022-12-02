@@ -56,7 +56,7 @@ export default function ModalDialog(props: any) {
             id='modal-modal-title'
             variant='body1'
             component='h4'
-            sx={{ fontWeight: "bold", mb: 2 }}
+            sx={{ fontWeight: "bold" }}
           >
             Uh-oh, Looks like you need to login first!
           </Typography>
@@ -72,7 +72,7 @@ export default function ModalDialog(props: any) {
             <Typography
               id='modal-modal-description'
               variant='subtitle1'
-              sx={{ mt: 1, mb: 1, textAlign: "center", fontWeight: "bold" }}
+              sx={{ mb: 1, textAlign: "center", fontWeight: "bold" }}
             >
               <span>
                 {" "}

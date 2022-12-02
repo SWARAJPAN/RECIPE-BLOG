@@ -134,7 +134,7 @@ export default function ResponsiveAppBar() {
                 display: { xs: "flex", md: "flex" },
                 fontWeight: 500,
                 color: "inherit",
-                textDecoration: "none",
+                // textDecoration: "none",
                 justifyContent: "space-between",
                 alignContent: "center",
                 margin: "auto",

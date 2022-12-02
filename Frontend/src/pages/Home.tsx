@@ -16,8 +16,6 @@ export default function SimpleContainer() {
   return (
     <React.Fragment>
       <Album />
-      {/* <Navbar /> */}
-      {/* <SignUp /> */}
     </React.Fragment>
   );
 }

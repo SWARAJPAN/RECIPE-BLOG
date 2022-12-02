@@ -37,6 +37,29 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import Loader from "../assets/loader.json";
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
 
+const cookingTime = [
+  {
+    value: "15mins",
+    label: "15mins",
+  },
+  {
+    value: "30mins",
+    label: "30mins",
+  },
+  {
+    value: "45mins",
+    label: "45mins",
+  },
+  {
+    value: "1hr+",
+    label: "1hr+",
+  },
+  {
+    value: "2hr+",
+    label: "2hr+",
+  },
+];
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -100,6 +123,7 @@ export default function Album() {
   const [totalPages, setTotalPages] = useState(0);
   const [length, setLength] = useState(0);
   const [skip, setSkip] = useState(0);
+  const [filter, setFilter] = useState("");
 
   const { id } = useParams();
 
@@ -113,20 +137,13 @@ export default function Album() {
   const limit = 9;
 
   useEffect(() => {
-    //loader on page load and search
-    // setLoading(true);
-    // API.get(`recipes`).then((res) => {
-    //   setLength(res.data.count);
-    //   console.log(res.data.count, "length");
-
-    //   setLoading(false);
-    // });
     const fetchRecipes = setTimeout(() => {
       setLoading(true);
       API.get(
-        `recipes?search=${search}&sort={'createdAt':-1}&skip=${skip}&limit=${limit}`
+        `recipes?${filter}&search=${search}&sort={'createdAt':-1}&skip=${skip}&limit=${limit}`
       ).then((res) => {
-        setRecipes(res.data.recipe);
+        console.log("ass0", res.data);
+        setRecipes(res.data.recipes);
         console.log(res.data.recipe);
 
         setLoading(false);
@@ -134,12 +151,19 @@ export default function Album() {
     }, 500);
 
     return () => clearTimeout(fetchRecipes);
+  }, [search, skip, filter, limit]);
 
-    //api call for pagination
-  }, [search, skip, limit]);
+  //api call for pagination
+  useEffect(() => {
+    API.get(`recipes`).then((res) => {
+      setLength(res.data.count);
+    });
+  }, [sendSearch, skip, limit]);
 
   console.log(skip, "length");
+
   const pages = Math.floor(length / limit);
+
   console.log("pages", pages);
 
   return (
@@ -202,6 +226,30 @@ export default function Album() {
           }}
         />
       </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {cookingTime.map((cookTime: any) => (
+          <Button
+            key={cookTime.value}
+            value={cookTime.value}
+            onClick={() => setFilter(`cookTime=${cookTime.value}`)}
+            className='chip'
+            // sx={{
+            //   display: "flex",
+            //   justifyContent: "center",
+            //   alignItems: "center",
+            //   mr: 1,
+            // }}
+          >
+            {cookTime.label}
+          </Button>
+        ))}
+      </Box>
 
       {loading ? (
         <Player
@@ -240,12 +288,13 @@ export default function Album() {
                       <CardMedia
                         component='img'
                         sx={{
-                          16: 9,
+                          // 16: 9,
+                          height: "35vh",
                           overflow: "hidden",
                           cursor: "default",
                           objectFit: "cover",
                           "@media (max-width:420px)": {
-                            height: "50%",
+                            height: "20vh",
                           },
                         }}
                         image={recipe.uploadImg}
@@ -288,6 +337,14 @@ export default function Album() {
                             {recipe.ethnicity}
                           </Typography>
                         </Box>
+                      </CardContent>
+                      <CardActions
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-evenly",
+                          alignItems: "flex-start",
+                        }}
+                      >
                         <Typography
                           variant='subtitle1'
                           component='h2'
@@ -295,6 +352,7 @@ export default function Album() {
                             display: "flex",
                             alignItems: "center",
                             fontSize: "0.9rem",
+                            minWidth: "50%",
                           }}
                         >
                           <Favorite
@@ -303,20 +361,17 @@ export default function Album() {
                           />
                           {recipe.likedBy.length} likes
                         </Typography>
-                      </CardContent>
-                      <CardActions>
                         <NavLink
                           to={`/detail/${recipe._id}`}
-                          style={{ textDecoration: "none", minWidth: "100%" }}
+                          style={{ textDecoration: "none" }}
                         >
                           <Button
                             variant='outlined'
-                            size='medium'
+                            size='small'
                             sx={{
                               justifyContent: "center",
-
-                              margin: "auto",
-                              minWidth: "100%",
+                              alignItems: "flex-end",
+                              minWidth: "110px",
                               fontWeight: "bold",
                               borderRadius: "6px",
                               border: "1px solid",
@@ -339,7 +394,12 @@ export default function Album() {
         </Container>
       )}
       {loading ? null : (
-        <RecipePagination pages={pages + 1} setSkip={setSkip} limit={limit} />
+        <RecipePagination
+          pages={pages + 1}
+          skip={skip}
+          limit={limit}
+          setSkip={setSkip}
+        />
       )}
 
       {login ? (
