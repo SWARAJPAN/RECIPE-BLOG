@@ -125,7 +125,10 @@ const validationSchema = yup.object({
     .min(3, "Must be at least 3 characters")
     .max(20, "Must be less  than 20 characters")
     .required("Name is required")
-    .matches(/^[a-zA-Z ]+$/, "Cannot contain special characters or numbers")
+    .matches(
+      /^[a-zA-Z / ' () " & ]+$/,
+      "Cannot contain special characters or numbers"
+    )
     .trim("Cannot contain spaces"),
   description: yup
     .string()
@@ -180,6 +183,7 @@ console.log(userId);
 export default function Publish() {
   const [login, setLogin] = React.useState(getTokenFromLocalStorage);
   const [image, setImage] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -208,8 +212,10 @@ export default function Publish() {
 
   const PublishRecipe = (data: any) => {
     {
+      setLoading(true);
       try {
         API.post("recipes", { ...data, uploadImg: image }).then((res) => {
+          setLoading(false);
           console.log(res);
 
           if (res.status === 201) {
@@ -523,13 +529,14 @@ export default function Publish() {
                     type='submit'
                     fullWidth
                     variant='contained'
+                    disabled={loading}
                     sx={{
                       mt: 3,
                       mb: 2,
                       boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
                     }}
                   >
-                    Publish!
+                    {loading ? "Publishing..." : "Publish"}
                   </Button>
                 </>
               ) : (

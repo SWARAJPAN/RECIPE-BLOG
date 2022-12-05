@@ -366,11 +366,14 @@ export default function DetailPage() {
                   <Chip
                     icon={<AvTimerIcon />}
                     label={detailRecipe.cookTime}
+                    //show+ if cooktime has hr in it
+
                     // label={
-                    //   detailRecipe.cookTime.includes("hr") === true
-                    //     ? detailRecipe.cookTime + "+"
-                    //     : detailRecipe.cookTime
+                    //   detailRecipe?.cookTime?.includes("hr") === true
+                    //     ? detailRecipe.cookTime.toString() + "plus"
+                    //     : detailRecipe.cookTime.toString()
                     // }
+
                     className='chip'
                     color='primary'
                   />

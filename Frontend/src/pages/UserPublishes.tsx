@@ -20,6 +20,7 @@ import Loader from "../assets/loader.json";
 import DeleteModal from "../components/DeleteModal";
 import Footer from "../components/Footer";
 import { API } from "../lib/axios";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
 
 import { Favorite } from "@mui/icons-material";
 import AvTimerIcon from "@mui/icons-material/AvTimer";
@@ -190,6 +191,18 @@ export default function UserPublishes() {
                                   : publishes.cookTime
                               }
                               className='chip'
+                              sx={{
+                                ":hover": {
+                                  backgroundColor: "white",
+                                  color: "black",
+                                },
+                              }}
+                            />
+                            <Chip
+                              icon={<LocalDiningIcon />}
+                              label={publishes.category}
+                              className='categoryChip'
+                              variant='outlined'
                               sx={{
                                 ":hover": {
                                   backgroundColor: "white",

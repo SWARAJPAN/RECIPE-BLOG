@@ -10,6 +10,7 @@ const getAllRecipe = async (req, res) => {
     $or: [
       { name: { $regex: `${search}`, $options: "i" } },
       { ethnicity: { $regex: `${search}`, $options: "i" } },
+      { category: { $regex: `${search}`, $options: "i" } },
     ],
   };
 
@@ -17,13 +18,7 @@ const getAllRecipe = async (req, res) => {
 
   try {
     const [recipes, total] = await Promise.all([
-      await Recipes.find(
-        filter
-        // $or: [
-        //   { name: { $regex: `${search}`, $options: "i" } },
-        //   { ethnicity: { $regex: `${search}`, $options: "i" } },
-        // ],
-      )
+      await Recipes.find(filter)
         .populate("publishedBy", "firstName lastName")
         .populate("likedBy" || "bookmarkedBy", "firstName lastName")
         .sort({ createdAt: -1 })

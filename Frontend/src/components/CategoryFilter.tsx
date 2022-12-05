@@ -1,4 +1,4 @@
-import AvTimerIcon from "@mui/icons-material/AvTimer";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import {
   Box,
   Chip,
@@ -9,15 +9,23 @@ import {
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-const cookingTime = [
-  { value: "15mins", label: "15mins" },
+const categoryType = [
   {
-    value: "30mins",
-    label: "30mins",
+    value: "Vegan",
+    label: "Vegan",
   },
-  { value: "45mins", label: "45mins" },
-  { value: "1hr", label: "1hr+" },
-  { value: "2hr", label: "2hr+" },
+  {
+    value: "Vegetarian",
+    label: "Vegetarian",
+  },
+  {
+    value: "Non-Vegetarian",
+    label: "Non-Vegetarian",
+  },
+  {
+    value: "Eggless",
+    label: "Eggless",
+  },
   {
     value: "all",
     label: "All",
@@ -25,11 +33,11 @@ const cookingTime = [
 ];
 
 interface Props {
-  filter: string;
-  setFilter: any;
+  category: string;
+  setCategory: any;
 }
 
-export default function TimeFilter({ filter, setFilter }: Props) {
+export default function CategoryFilter({ category, setCategory }: Props) {
   return (
     <Box
       sx={{
@@ -37,10 +45,11 @@ export default function TimeFilter({ filter, setFilter }: Props) {
         // justifyContent: "center",
         alignItems: "center",
         height: "100%",
+
         // width: "100%",
       }}
     >
-      <Grid container spacing={2} maxWidth='md'>
+      <Grid container spacing={2} maxWidth='xl'>
         <Grid
           item
           xs={6}
@@ -53,18 +62,18 @@ export default function TimeFilter({ filter, setFilter }: Props) {
             title={
               <>
                 <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
-                  Filter by cooking time
+                  Filter by category
                 </Typography>
               </>
             }
-            placement='right'
+            placement='left'
             arrow
           >
             <SpeedDial
               ariaLabel='SpeedDial example'
-              sx={{ position: "relative", mt: 1, mb: 1 }}
-              icon={<AvTimerIcon />}
-              direction='left'
+              sx={{ position: "relative", mt: 1, mb: 1, ml: 8 }}
+              icon={<LocalDiningIcon />}
+              direction='right'
               FabProps={{
                 variant: "extended",
 
@@ -72,7 +81,7 @@ export default function TimeFilter({ filter, setFilter }: Props) {
                 sx: { fontSize: "1rem" },
               }}
             >
-              {cookingTime.map((action) => (
+              {categoryType.map((action) => (
                 <SpeedDialAction
                   key={action.value}
                   FabProps={{ variant: "extended" }}
@@ -83,9 +92,9 @@ export default function TimeFilter({ filter, setFilter }: Props) {
                   }
                   onClick={() => {
                     if (action.value === "all") {
-                      setFilter("");
+                      setCategory("");
                     } else {
-                      setFilter(`cookTime=${action.value}`);
+                      setCategory(`category=${action.value}`);
                     }
                   }}
                 />
@@ -101,9 +110,9 @@ export default function TimeFilter({ filter, setFilter }: Props) {
           xl={6}
           md={6}
           sm={6}
-          display={{ xs: "grid", sm: "grid", md: "none", lg: "none" }}
+          display={{ xs: "grid", sm: "block", md: "none", lg: "none" }}
         >
-          {cookingTime.map((action) => (
+          {categoryType.map((action) => (
             <Chip
               key={action.value}
               label={action.label}
@@ -112,21 +121,21 @@ export default function TimeFilter({ filter, setFilter }: Props) {
               sx={{
                 m: 1,
                 color:
-                  filter === `cookTime=${action.value}`
+                  category === `category=${action.value}`
                     ? "primary.main"
                     : "secondary.main",
                 borderColor:
-                  filter === `cookTime=${action.value}`
+                  category === `category=${action.value}`
                     ? "primary.main"
                     : " secondary.main",
                 // color: "white",
               }}
               onClick={() => {
                 if (action.value === "all") {
-                  setFilter("");
+                  setCategory("");
                   // handleSelected(action.value);
                 } else {
-                  setFilter(`cookTime=${action.value}`);
+                  setCategory(`category=${action.value}`);
                 }
               }}
             />

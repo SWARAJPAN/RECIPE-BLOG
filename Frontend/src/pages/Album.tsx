@@ -17,13 +17,15 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import RecipePagination from "../components/RecipePagination";
 import { API } from "../lib/axios";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
 
 import { Player } from "@lottiefiles/react-lottie-player";
-import { Favorite } from "@mui/icons-material";
+import { Category, Favorite } from "@mui/icons-material";
 import AvTimerIcon from "@mui/icons-material/AvTimer";
 import SearchIcon from "@mui/icons-material/Search";
 import Loader from "../assets/loader.json";
 import TimeFilter from "../components/TimeFilter";
+import CategoryFilter from "../components/CategoryFilter";
 
 const theme = createTheme({
   palette: {
@@ -90,6 +92,7 @@ export default function Album() {
   const [filter, setFilter] = useState("");
 
   const [empty, setEmpty] = useState(false);
+  const [category, setCategory] = useState("");
 
   const { id } = useParams();
 
@@ -109,7 +112,7 @@ export default function Album() {
       setEmpty(false);
 
       API.get(
-        `recipes?${filter}&search=${search}&sort={'createdAt':-1}&skip=${skip}&limit=${limit}`
+        `recipes?${filter}&${category}&search=${search}&sort={'createdAt':-1}&skip=${skip}&limit=${limit}`
       ).then((res) => {
         console.log("recipes", res.data);
         setRecipes(res.data.recipes);
@@ -123,7 +126,7 @@ export default function Album() {
     }, 500);
 
     return () => clearTimeout(fetchRecipes);
-  }, [search, skip, filter, limit]);
+  }, [search, skip, filter, limit, category]);
 
   //api call for pagination
   useEffect(() => {
@@ -199,7 +202,19 @@ export default function Album() {
         />
       </Box>
       {/* <-----------------Filter-----------------> */}
-      <TimeFilter filter={filter} setFilter={setFilter} />
+      <Container maxWidth='md'>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+
+            alignItems: "baseline",
+          }}
+        >
+          <CategoryFilter category={category} setCategory={setCategory} />
+          <TimeFilter filter={filter} setFilter={setFilter} />
+        </Box>
+      </Container>
 
       {loading ? (
         <Player
@@ -277,6 +292,19 @@ export default function Album() {
                             : recipe.cookTime
                         }
                         className='chip'
+                        variant='outlined'
+                        sx={{
+                          ":hover": {
+                            backgroundColor: "white",
+                            color: "black",
+                          },
+                        }}
+                      />
+
+                      <Chip
+                        icon={<LocalDiningIcon />}
+                        label={recipe.category}
+                        className='categoryChip'
                         variant='outlined'
                         sx={{
                           ":hover": {

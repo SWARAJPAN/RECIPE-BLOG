@@ -20,6 +20,7 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Loader from "../assets/loader.json";
 import Footer from "../components/Footer";
 import { API } from "../lib/axios";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
 
 const theme = createTheme({
   palette: {
@@ -170,14 +171,25 @@ export default function UserBookmarks() {
                           />
                           <Chip
                             icon={<AvTimerIcon />}
-                            // label={bookmark.cookTime}
-                            //only add + sign after hr
                             label={
                               bookmark.cookTime.includes("hr") === true
                                 ? bookmark.cookTime + "+"
                                 : bookmark.cookTime
                             }
                             className='chip'
+                            variant='outlined'
+                            sx={{
+                              ":hover": {
+                                backgroundColor: "white",
+                                color: "black",
+                              },
+                            }}
+                          />
+
+                          <Chip
+                            icon={<LocalDiningIcon />}
+                            label={bookmark.category}
+                            className='categoryChip'
                             variant='outlined'
                             sx={{
                               ":hover": {
