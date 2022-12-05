@@ -1,4 +1,5 @@
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
+import Badge from "@mui/material/Badge";
 import {
   Box,
   Chip,
@@ -56,7 +57,13 @@ export default function CategoryFilter({ category, setCategory }: Props) {
           xl={6}
           md={6}
           sm={6}
-          display={{ xs: "none", sm: "none", md: "block", lg: "block" }}
+          display={{
+            xs: "none",
+            sm: "none",
+            md: "block",
+            lg: "block",
+            xl: "block",
+          }}
         >
           <Tooltip
             title={
@@ -71,7 +78,7 @@ export default function CategoryFilter({ category, setCategory }: Props) {
           >
             <SpeedDial
               ariaLabel='SpeedDial example'
-              sx={{ position: "relative", mt: 1, mb: 1, ml: 8 }}
+              sx={{ position: "relative", mt: 1, mb: 1, ml: 10 }}
               icon={<LocalDiningIcon />}
               direction='right'
               FabProps={{
@@ -107,10 +114,23 @@ export default function CategoryFilter({ category, setCategory }: Props) {
         <Grid
           item
           xs={12}
-          xl={6}
-          md={6}
-          sm={6}
-          display={{ xs: "grid", sm: "block", md: "none", lg: "none" }}
+          xl={0}
+          md={0}
+          sm={12}
+          sx={{
+            overflowX: {
+              xs: "scroll",
+              sm: "scroll",
+              md: "hidden",
+              lg: "hidden",
+              xl: "hidden",
+            },
+            display: "flex",
+            // justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            width: "100%",
+          }}
         >
           {categoryType.map((action) => (
             <Chip
@@ -128,6 +148,14 @@ export default function CategoryFilter({ category, setCategory }: Props) {
                   category === `category=${action.value}`
                     ? "primary.main"
                     : " secondary.main",
+
+                display: {
+                  xs: "block",
+                  sm: "block",
+                  md: "none",
+                  lg: "none",
+                  xl: "none",
+                },
                 // color: "white",
               }}
               onClick={() => {

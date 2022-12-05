@@ -100,8 +100,21 @@ export default function TimeFilter({ filter, setFilter }: Props) {
           xs={12}
           xl={6}
           md={6}
-          sm={6}
-          display={{ xs: "grid", sm: "grid", md: "none", lg: "none" }}
+          sm={12}
+          // display={{ xs: "flex", sm: "grid", md: "none", lg: "none" }}
+          sx={{
+            overflowX: {
+              xs: "scroll",
+              sm: "hidden",
+              md: "hidden",
+              lg: "hidden",
+            },
+            display: "flex",
+            // justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            width: "100%",
+          }}
         >
           {cookingTime.map((action) => (
             <Chip
@@ -120,6 +133,13 @@ export default function TimeFilter({ filter, setFilter }: Props) {
                     ? "primary.main"
                     : " secondary.main",
                 // color: "white",
+                display: {
+                  xs: "block",
+                  sm: "block",
+                  md: "none",
+                  lg: "none",
+                  xl: "none",
+                },
               }}
               onClick={() => {
                 if (action.value === "all") {

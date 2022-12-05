@@ -201,20 +201,51 @@ export default function Album() {
           }}
         />
       </Box>
-      {/* <-----------------Filter-----------------> */}
+      {/* <-----------------Filter for PC-----------------> */}
       <Container maxWidth='md'>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-
-            alignItems: "baseline",
+        <Grid
+          container
+          spacing={2}
+          display={{
+            xs: "none",
+            sm: "none",
+            md: "block",
+            lg: "block",
+            xl: "block",
           }}
         >
-          <CategoryFilter category={category} setCategory={setCategory} />
-          <TimeFilter filter={filter} setFilter={setFilter} />
-        </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+
+              alignItems: "baseline",
+            }}
+          >
+            <CategoryFilter category={category} setCategory={setCategory} />
+            <TimeFilter filter={filter} setFilter={setFilter} />
+          </Box>
+        </Grid>
       </Container>
+      {/* <-----------------Filter for Mobile-----------------> */}
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          mt: 2,
+        }}
+        mt={2}
+        display={{
+          xs: "block",
+          sm: "block",
+          md: "none",
+          lg: "none",
+          xl: "none",
+        }}
+      >
+        <CategoryFilter category={category} setCategory={setCategory} />
+        <TimeFilter filter={filter} setFilter={setFilter} />
+      </Grid>
 
       {loading ? (
         <Player
