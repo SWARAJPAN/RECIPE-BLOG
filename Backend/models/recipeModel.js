@@ -38,11 +38,9 @@ const RecipeSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    uploadImg: [
-      {
-        type: String,
-      },
-    ],
+    uploadImg: {
+      type: String,
+    },
 
     bookmarkedBy: [
       {

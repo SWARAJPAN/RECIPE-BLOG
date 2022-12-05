@@ -1,33 +1,26 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { red } from "@mui/material/colors";
 import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
-import { red, blue } from "@mui/material/colors";
 
-import Footer from "../components/Footer";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import { Player } from "@lottiefiles/react-lottie-player";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
-import Register from "../assets/publish.json";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import Footer from "../components/Footer";
 
-import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
-import { BoltOutlined, DisabledByDefault } from "@mui/icons-material";
-import Divider from "@mui/material/Divider";
-import Chip from "@mui/material/Chip";
+import { useFormik } from "formik";
 
-import { API } from "../lib/axios";
 import { MenuItem } from "@mui/material";
+import { API } from "../lib/axios";
 
 const theme = createTheme({
   palette: {
@@ -117,11 +110,11 @@ const cookingTime = [
     label: "45mins",
   },
   {
-    value: "1hr+",
+    value: "1hr",
     label: "1hr+",
   },
   {
-    value: "2hr+",
+    value: "2hr",
     label: "2hr+",
   },
 ];
@@ -142,14 +135,14 @@ const validationSchema = yup.object({
   ethnicity: yup
     .string()
     .min(3, "Must be at least 3 characters")
-    .max(20, "Must be less  than 20 characters")
+    .max(50, "Must be less  than 20 characters")
     .required("Plsease put your ethnicity")
     .matches(/^[a-zA-Z ]+$/, "Cannot contain special characters or numbers")
     .trim("Cannot contain spaces"),
   ingredients: yup
     .string()
     .min(10, "Must be at least 10 characters")
-    .matches(/^[a-zA-Z ,0-9]+$/, "Cannot contain special characters")
+    // .matches(/^[a-zA-Z ,0-9]+$/, "Cannot contain special characters")
     .required("Plsease provide an ingredients")
     .trim("Cannot contain spaces"),
   instruction: yup
@@ -158,7 +151,7 @@ const validationSchema = yup.object({
     .required("Plsease provide an instruction")
     .trim("Cannot contain spaces"),
   category: yup.string().required("Please select a category"),
-  cookTime: yup.string().required("Required"),
+  cookTime: yup.string().required("Required").trim("Cannot contain spaces"),
 });
 
 interface Values {
@@ -249,13 +242,6 @@ export default function Publish() {
     getBase64(file, (result: any) => {
       setImage(result);
     });
-  };
-
-  // show uploaded image
-  const showImage = () => {
-    if (image) {
-      uploadImage(image);
-    }
   };
 
   return (
@@ -504,14 +490,33 @@ export default function Publish() {
                       accept='image/png, image/jpeg, image/jpg, image/gif,'
                       multiple
                       type='file'
-                      onChange={showImage}
+                      onChange={uploadImage}
                       style={{
                         display: "none",
                       }}
                     />
                   </Button>
+                  {image && (
+                    <img
+                      src={image}
+                      style={{
+                        height: "auto",
+                        width: "100%",
+                      }}
+                    />
+                  )}
                 </Grid>
               </Grid>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  margin: "1rem",
+                }}
+              ></Box>
               {login ? (
                 <>
                   <Button

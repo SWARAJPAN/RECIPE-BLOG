@@ -3,7 +3,7 @@ const express = require("express");
 const connectDB = require("./db/connect");
 const bodyParser = require("body-parser");
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 const cors = require("cors");
 const app = express();
 
@@ -23,7 +23,7 @@ app.use("/api/v1", userRouter);
 
 app.listen(port, async () => {
   await connectDB().then((c) => console.log("db connected"));
-  console.log("connect to port 4000");
+  console.log("connect to port 3000");
 });
 
 app.use(express.json());

@@ -1,26 +1,16 @@
-import * as React from "react";
+import RamenDiningIcon from "@mui/icons-material/RamenDining";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import RamenDiningIcon from "@mui/icons-material/RamenDining";
+import Container from "@mui/material/Container";
+import { createTheme } from "@mui/material/styles";
+import ThemeProvider from "@mui/material/styles/ThemeProvider";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import AccountMenu from "./AccountMenu";
 import PublicMenu from "./PublicMenu";
-import { useState } from "react";
-import ThemeProvider from "@mui/material/styles/ThemeProvider";
-import { createTheme } from "@mui/material/styles";
-import { orange, red } from "@mui/material/colors";
-import { Link } from "react-router-dom";
-import { Logout } from "@mui/icons-material";
-import Logo from "../assets/blob.svg";
 
 // const token: string = JSON.parse(localStorage.getItem("token"));
 
@@ -60,11 +50,6 @@ const theme = createTheme({
 });
 
 const pages = [
-  {
-    id: 1,
-    title: "Explore",
-    path: "/",
-  },
   {
     id: 2,
     title: "Publish",
@@ -129,7 +114,8 @@ export default function ResponsiveAppBar() {
             <Typography
               variant='h4'
               noWrap
-              component='a'
+              component={Link}
+              to='/'
               sx={{
                 display: { xs: "flex", md: "flex" },
                 fontWeight: 500,
@@ -165,7 +151,6 @@ export default function ResponsiveAppBar() {
                     <Button
                       key={page.id}
                       sx={{
-                        // my: 2,
                         borderRadius: 2,
                         margin: "0",
                         color: "inherit",
@@ -183,8 +168,6 @@ export default function ResponsiveAppBar() {
 
             <Box
               sx={{
-                // flexGrow: 1,
-                // margin: "0",
                 display: { xs: "block", md: "flex" },
               }}
             >

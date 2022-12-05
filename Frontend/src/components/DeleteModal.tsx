@@ -1,14 +1,6 @@
-import React from "react";
-import { Button, IconButton, Modal, Typography } from "@mui/material";
+import { Button, Modal, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { API } from "../lib/axios";
-
-import { NavLink, useNavigate } from "react-router-dom";
-
-// interface Porps{
-//   recipeId
-
-// }
 
 export default function DeleteModal(props: any) {
   console.log(props);
@@ -73,17 +65,16 @@ export default function DeleteModal(props: any) {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-evenly",
+              justifyContent: "space-around",
               alignItems: "center",
               mt: 4,
             }}
           >
-            <Button variant='contained' size='small' onClick={deleteRecipe}>
+            <Button variant='contained' onClick={deleteRecipe}>
               Delete
             </Button>
             <Button
               variant='outlined'
-              size='small'
               color='secondary'
               onClick={props.onClose}
             >

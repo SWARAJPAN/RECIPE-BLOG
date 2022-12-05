@@ -1,35 +1,31 @@
-import React, { useLayoutEffect } from "react";
+import React from "react";
 
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import Card from "@mui/material/Card";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CardMedia from "@mui/material/CardMedia";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { NavLink, useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
-import { red } from "@mui/material/colors";
-import Link, { Chip, IconButton, Pagination } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
-import Favorite from "@mui/icons-material/Favorite";
-import Divider from "@mui/material/Divider";
-import { useState, useEffect } from "react";
-import { API } from "../lib/axios";
-import { useParams } from "react-router-dom";
-import Modal from "../components/ModalDialog";
-import ModalDialog from "../components/ModalDialog";
-import LocalDiningIcon from "@mui/icons-material/LocalDining";
-import AvTimerIcon from "@mui/icons-material/AvTimer";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { Player } from "@lottiefiles/react-lottie-player";
+import AvTimerIcon from "@mui/icons-material/AvTimer";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import Favorite from "@mui/icons-material/Favorite";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import { Chip } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import Checkbox from "@mui/material/Checkbox";
+import { red } from "@mui/material/colors";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../assets/loader.json";
-import { margin } from "@mui/system";
+import Footer from "../components/Footer";
+import ModalDialog from "../components/ModalDialog";
+import { API } from "../lib/axios";
 
 const theme = createTheme({
   palette: {
@@ -350,7 +346,6 @@ export default function DetailPage() {
                 </Grid>
               </Grid>
             </Grid>
-
             <Grid item xs={12} sm={6} xl={6}>
               <Grid item>
                 <Card
@@ -364,14 +359,26 @@ export default function DetailPage() {
                   <CardMedia
                     component='img'
                     image={detailRecipe.uploadImg}
-                    alt='image'
+                    alt='recipe image'
                     height='500'
                   />
 
                   <Chip
                     icon={<AvTimerIcon />}
                     label={detailRecipe.cookTime}
+                    // label={
+                    //   detailRecipe.cookTime.includes("hr") === true
+                    //     ? detailRecipe.cookTime + "+"
+                    //     : detailRecipe.cookTime
+                    // }
                     className='chip'
+                    color='primary'
+                  />
+
+                  <Chip
+                    icon={<Favorite />}
+                    label={likeLength}
+                    className='likeChip'
                     color='primary'
                   />
                 </Card>
@@ -410,13 +417,14 @@ export default function DetailPage() {
                       icon={<FavoriteBorder />}
                       checkedIcon={<Favorite />}
                     />
-                    {liked ? `${likeLength} Likes` : "Like this recipe?"}
+                    {liked ? "Liked! " : "Like this recipe?"}
                   </Typography>
 
                   <Button
                     onClick={handleBookmark}
                     size='small'
-                    variant='outlined'
+                    variant={bookmarked ? "contained" : "outlined"}
+                    color={bookmarked ? "primary" : "secondary"}
                     sx={{
                       height: "2.5rem",
                       lineHeight: "1rem",
@@ -425,13 +433,19 @@ export default function DetailPage() {
                       "&:hover": {
                         backgroundColor: "primary.main",
                         color: "white",
+                        borderColor: "primary.main",
                       },
                       "@media (max-width:420px)": {
                         width: "100%",
                       },
                     }}
                   >
-                    <BookmarkIcon sx={{ marginRight: "5px" }} />{" "}
+                    {bookmarked ? (
+                      <BookmarkIcon sx={{ marginRight: "5px" }} />
+                    ) : (
+                      <BookmarkBorderIcon sx={{ marginRight: "5px" }} />
+                    )}
+                    {/* <BookmarkIcon     />{" "} */}
                     {bookmarked ? "Bookmarked! " : "Bookmark this recipe?"}
                   </Button>
 

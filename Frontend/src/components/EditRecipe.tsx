@@ -1,33 +1,24 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { red } from "@mui/material/colors";
 import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
-import * as yup from "yup";
-import { red, blue } from "@mui/material/colors";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import Footer from "../components/Footer";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { Player } from "@lottiefiles/react-lottie-player";
-import Loader from "../assets/loader.json";
-import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
-import { BoltOutlined, DisabledByDefault } from "@mui/icons-material";
-import Divider from "@mui/material/Divider";
-import Chip from "@mui/material/Chip";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import Loader from "../assets/loader.json";
+import Footer from "../components/Footer";
 
-import { API } from "../lib/axios";
 import { MenuItem } from "@mui/material";
+import { API } from "../lib/axios";
 
 const theme = createTheme({
   palette: {
@@ -117,11 +108,11 @@ const cookingTime = [
     label: "45mins",
   },
   {
-    value: "1hr+",
+    value: "1hr",
     label: "1hr+",
   },
   {
-    value: "2hr+",
+    value: "2hr",
     label: "2hr+",
   },
 ];
@@ -155,9 +146,9 @@ export default function EditRecipe() {
     const reader = new FileReader();
 
     reader.readAsDataURL(file!);
-    reader.onloadend = () => {
+    reader.addEventListener("loadend", () => {
       setUpdatedImg(reader.result as string);
-    };
+    });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

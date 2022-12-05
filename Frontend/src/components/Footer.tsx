@@ -1,24 +1,6 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
-import CameraIcon from "@mui/icons-material/PhotoCamera";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { red, blue } from "@mui/material/colors";
 import Divider from "@mui/material/Divider";
-import { Player } from "@lottiefiles/react-lottie-player";
-import FooterBg from "../assets/footer.json";
+import Typography from "@mui/material/Typography";
 
 function Copyright(props: any) {
   return (
@@ -38,8 +20,6 @@ function Copyright(props: any) {
 export default function Footer() {
   return (
     <>
-      {/* Footer */}
-
       <Box
         sx={{
           bgcolor: "background.paper",
@@ -55,17 +35,7 @@ export default function Footer() {
             display: "flex",
           }}
         />
-        {/* <Player
-          autoplay
-          loop
-          src={FooterBg}
-          style={{
-            overflow: "hidden",
-            // zIndex: "4",
-            height: "200px",
-            width: "100%",
-          }}
-        /> */}
+
         <Typography
           variant='subtitle1'
           align='center'

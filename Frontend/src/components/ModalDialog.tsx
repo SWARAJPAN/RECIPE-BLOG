@@ -1,12 +1,10 @@
-import React from "react";
 import { IconButton, Modal, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 
-import CloseIcon from "@mui/icons-material/Close";
-import { NavLink, useNavigate } from "react-router-dom";
-import Restrict from "../assets/restric.json";
-import Cat from "../assets/cat.json";
 import { Player } from "@lottiefiles/react-lottie-player";
+import CloseIcon from "@mui/icons-material/Close";
+import { NavLink } from "react-router-dom";
+import Restrict from "../assets/restric.json";
 
 export default function ModalDialog(props: any) {
   return (
@@ -63,7 +61,7 @@ export default function ModalDialog(props: any) {
           <Player
             autoplay
             loop
-            src={Cat}
+            src={Restrict}
             style={{
               height: "200px",
               width: "200px",

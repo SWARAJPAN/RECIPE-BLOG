@@ -1,64 +1,29 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
+import { Chip, InputAdornment, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CameraIcon from "@mui/icons-material/PhotoCamera";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import { orange, red } from "@mui/material/colors";
+import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { red, orange } from "@mui/material/colors";
-import { NavLink, useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Footer from "../components/Footer";
-import Divider from "@mui/material/Divider";
-import { useState, useEffect } from "react";
-import { API } from "../lib/axios";
-import { useParams } from "react-router-dom";
-import {
-  Checkbox,
-  Chip,
-  InputAdornment,
-  Pagination,
-  TextField,
-} from "@mui/material";
 import RecipePagination from "../components/RecipePagination";
-import SearchBar from "../components/SearchBar";
-import SearchIcon from "@mui/icons-material/Search";
-import AvTimerIcon from "@mui/icons-material/AvTimer";
-import { Player } from "@lottiefiles/react-lottie-player";
-import Loader from "../assets/loader.json";
-import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import { API } from "../lib/axios";
 
-const cookingTime = [
-  {
-    value: "15mins",
-    label: "15mins",
-  },
-  {
-    value: "30mins",
-    label: "30mins",
-  },
-  {
-    value: "45mins",
-    label: "45mins",
-  },
-  {
-    value: "1hr+",
-    label: "1hr+",
-  },
-  {
-    value: "2hr+",
-    label: "2hr+",
-  },
-];
+import { Player } from "@lottiefiles/react-lottie-player";
+import { Favorite } from "@mui/icons-material";
+import AvTimerIcon from "@mui/icons-material/AvTimer";
+import SearchIcon from "@mui/icons-material/Search";
+import Loader from "../assets/loader.json";
+import TimeFilter from "../components/TimeFilter";
 
 const theme = createTheme({
   palette: {
@@ -119,15 +84,14 @@ export default function Album() {
   const [login, setLogin] = useState(getTokenFromLocalStorage());
   const [search, setSearch] = useState("");
   const [sendSearch, setSendSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+
   const [length, setLength] = useState(0);
   const [skip, setSkip] = useState(0);
   const [filter, setFilter] = useState("");
 
-  const { id } = useParams();
+  const [empty, setEmpty] = useState(false);
 
-  //search a recipe
+  const { id } = useParams();
 
   const handleSearch = (e: any) => {
     e.preventDefault();
@@ -136,17 +100,25 @@ export default function Album() {
   };
   const limit = 9;
 
+  //api call for recipes
+
   useEffect(() => {
     const fetchRecipes = setTimeout(() => {
       setLoading(true);
+
+      setEmpty(false);
+
       API.get(
         `recipes?${filter}&search=${search}&sort={'createdAt':-1}&skip=${skip}&limit=${limit}`
       ).then((res) => {
-        console.log("ass0", res.data);
+        console.log("recipes", res.data);
         setRecipes(res.data.recipes);
         console.log(res.data.recipe);
-
         setLoading(false);
+
+        if (res.data.recipes.length === 0) {
+          setEmpty(true);
+        }
       });
     }, 500);
 
@@ -179,7 +151,7 @@ export default function Album() {
           <Typography
             component='h1'
             variant='h2'
-            display={{ xs: "none", sm: "block" }}
+            display={{ xs: "flex", sm: "block" }}
           >
             Find your next recipe!
           </Typography>
@@ -226,30 +198,8 @@ export default function Album() {
           }}
         />
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {cookingTime.map((cookTime: any) => (
-          <Button
-            key={cookTime.value}
-            value={cookTime.value}
-            onClick={() => setFilter(`cookTime=${cookTime.value}`)}
-            className='chip'
-            // sx={{
-            //   display: "flex",
-            //   justifyContent: "center",
-            //   alignItems: "center",
-            //   mr: 1,
-            // }}
-          >
-            {cookTime.label}
-          </Button>
-        ))}
-      </Box>
+      {/* <-----------------Filter-----------------> */}
+      <TimeFilter filter={filter} setFilter={setFilter} />
 
       {loading ? (
         <Player
@@ -259,12 +209,29 @@ export default function Album() {
           style={{ height: "300px", width: "300px" }}
         />
       ) : (
-        <Container sx={{ py: 8, mb: 2 }} maxWidth='lg'>
-          <Grid container spacing={6}>
-            {recipes
-              // .slice((page - 1) * 9, page * 9)
+        <Container sx={{ py: 7, mb: 2 }} maxWidth='lg'>
+          {empty ? (
+            <Grid item xs={12} sm={12} md={12} xl={12}>
+              <Typography
+                variant='h2'
+                component='h2'
+                gutterBottom
+                sx={{
+                  textAlign: "center",
+                  fontSize: "1.8rem",
+                  magin: "auto",
+                  display: "flex",
 
-              .map((recipe: any, index: number) => {
+                  justifyContent: "center",
+                }}
+              >
+                Sorry, it looks like there are no recipes that match your
+                search.
+              </Typography>
+            </Grid>
+          ) : (
+            <Grid container spacing={6}>
+              {recipes.map((recipe: any, index: number) => {
                 return (
                   <Grid item key={recipes._id} xs={12} sm={6} md={4}>
                     <Card
@@ -272,7 +239,7 @@ export default function Album() {
                         maxHeight: "85%",
                         display: "flex",
                         flexDirection: "column",
-                        boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;",
+                        boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 15px 0px",
                         borderRadius: "10px",
                         transition: "all 0.2s ease-in-out",
                         cursor: "pointer",
@@ -298,12 +265,17 @@ export default function Album() {
                           },
                         }}
                         image={recipe.uploadImg}
-                        alt='random'
+                        alt='recipe image'
                       />
 
                       <Chip
                         icon={<AvTimerIcon />}
-                        label={recipe.cookTime}
+                        // label={recipe.cookTime}
+                        label={
+                          recipe.cookTime.includes("hr") === true
+                            ? recipe.cookTime + "+"
+                            : recipe.cookTime
+                        }
                         className='chip'
                         variant='outlined'
                         sx={{
@@ -359,7 +331,8 @@ export default function Album() {
                             color='primary'
                             sx={{ marginRight: "5px", size: "0.9rem" }}
                           />
-                          {recipe.likedBy.length} likes
+                          {recipe.likedBy.length}{" "}
+                          {recipe.likedBy.length > 1 ? "likes" : "like"}
                         </Typography>
                         <NavLink
                           to={`/detail/${recipe._id}`}
@@ -390,9 +363,11 @@ export default function Album() {
                   </Grid>
                 );
               })}
-          </Grid>
+            </Grid>
+          )}
         </Container>
       )}
+
       {loading ? null : (
         <RecipePagination
           pages={pages + 1}
@@ -401,7 +376,6 @@ export default function Album() {
           setSkip={setSkip}
         />
       )}
-
       {login ? (
         <Typography
           color={theme.palette.secondary.main}
@@ -415,7 +389,7 @@ export default function Album() {
             mt: 4,
           }}
         >
-          Welcome {login.user}!
+          Welcome{login.user}!
         </Typography>
       ) : (
         <Typography variant='subtitle1' align='center' sx={{ mt: 12 }}>

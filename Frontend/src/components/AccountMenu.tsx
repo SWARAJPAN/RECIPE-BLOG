@@ -1,24 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import RamenDiningIcon from "@mui/icons-material/RamenDining";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link, Navigate, NavLink } from "react-router-dom";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom";
 // import { NavLink } from "react-router-dom";
-import { red, blue } from "@mui/material/colors";
-import { useState } from "react";
-import { Login } from "@mui/icons-material";
+import { red } from "@mui/material/colors";
 
 const logout = () => {
   console.log("logout");
@@ -79,10 +70,7 @@ export default function AccountMenu() {
             height: "50px",
             padding: "1rem",
           }}
-          // color='inherit'
-          // size='large'
         >
-          {/* <Avatar src='/broken-image.jpg' /> */}
           <AccountCircleIcon />
         </IconButton>
       </Tooltip>
@@ -103,7 +91,6 @@ export default function AccountMenu() {
         onClose={handleCloseUserMenu}
       >
         {settings.map((setting) => (
-          // <Link to={`${setting.path}`}>
           <Link
             to={`${setting.path}`}
             key={setting.title}
